@@ -1,0 +1,18 @@
+{
+    "name": "moises/auto-cms",
+    "description": "av1 3p sist info - lab de sistemas",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Moises\\AutoCms\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Moisés Menezes Mele",
+            "email": "moisesmmele@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

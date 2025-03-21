@@ -1,17 +1,25 @@
 <?php
 
+use Moises\AutoCms\App\App;
+use Moises\AutoCms\App\Container;
 use Moises\AutoCms\App\Http\Request;
 use Moises\AutoCms\App\Http\Response;
 use Moises\AutoCms\App\Router;
 
-const ROOT_DIR = __DIR__ . "/..";
-require_once ROOT_DIR . '/vendor/autoload.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+$dsn = 'sqlite:' . dirname(__DIR__) . '/db.sqlite';
 
-$router = new Router();
+App::setContainer(new Container());
+App::setPdo(new PDO(dsn: $dsn));
+App::setRouter(new Router());
 
-$router->register('/test', [\Moises\AutoCms\App\Controllers\TestController::class, 'index']);
+App::container()->set(\Moises\AutoCms\Core\Repositories\Vehicle\MakeRepository::class, \Moises\AutoCms\App\Repositories\Pdo\PdoMakeRepository::class);
+
+App::router()->register('GET', '/test', [\Moises\AutoCms\App\Controllers\TestController::class, 'index']);
+App::router()->register('GET', '/makes', [\Moises\AutoCms\App\Controllers\Vehicle\MakeController::class, 'index']);
+App::router()->register('POST', '/makes', [\Moises\AutoCms\App\Controllers\Vehicle\MakeController::class, 'create']);
 
 $request = new Request();
 $response = new Response();
 
-$router->dispatch($request, $response);
+App::router()->dispatch($request, $response);

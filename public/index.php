@@ -1,10 +1,12 @@
 <?php
 
+use Dotenv\Dotenv;
 use Moises\AutoCms\App\App;
 use Moises\AutoCms\App\Container;
 use Moises\AutoCms\App\Controllers\TestController;
 use Moises\AutoCms\App\Controllers\Vehicle\ColorsController;
 use Moises\AutoCms\App\Controllers\Vehicle\MakeController;
+use Moises\AutoCms\App\Database\Database;
 use Moises\AutoCms\App\Http\Request;
 use Moises\AutoCms\App\Http\Response;
 use Moises\AutoCms\App\Repositories\Pdo\FakeColorsRepository;
@@ -14,10 +16,12 @@ use Moises\AutoCms\Core\Repositories\Vehicle\ColorsRepository;
 use Moises\AutoCms\Core\Repositories\Vehicle\MakeRepository;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
+Dotenv::createImmutable(dirname(__DIR__), '.env')->load();
+
 $dsn = 'sqlite:' . dirname(__DIR__) . '/db.sqlite';
 
 App::setContainer(new Container());
-App::setPdo(new PDO(dsn: $dsn));
+App::setDatabase(new Database());
 App::setRouter(new Router());
 
 App::container()->set(MakeRepository::class, PdoMakeRepository::class);

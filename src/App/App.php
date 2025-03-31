@@ -7,7 +7,7 @@ use PDO;
 class App
 {
     protected static $container;
-    protected static $pdo;
+    protected static $database;
     protected static $router;
 
     public static function setContainer(Container $container)
@@ -29,13 +29,13 @@ class App
         return static::$router;
     }
 
-    public static function setPdo(PDO $pdo)
+    public static function setDatabase($database)
     {
-        static::$pdo = $pdo;
+        static::$pdo = $database;
     }
 
-    public static function pdo()
+    public static function database()
     {
-        return static::$pdo;
+        return static::$database;
     }
 }

@@ -47,4 +47,37 @@ class Router
         header("HTTP/1.0 404 Not Found");
         echo "404 Not Found";
     }
+
+    public function dispatchTest(Request $request, Response $response)
+    {
+        $requestUri = $request->getUri();
+        $requestMethod = $request->getMethod();
+
+        foreach ($this->routes as $route) {
+            $pattern = preg_replace("#\{\w+\}#", "([^/]+)", $route['uri']);
+            if (preg_match("#^$pattern$#", $requestUri, $matches)) {
+                $param = $matches[1];
+                if ($requestMethod === $route['method']) {
+                    $this->callRouteAction($request, $response, $route['action'], $param);
+                    return;
+                }
+            }
+        }
+        // If no matching route found, return 404
+        header("HTTP/1.0 404 Not Found");
+        echo "404 Not Found";
+    }
+
+    public function callRouteAction(Request $request, Response $response, $action, $param)
+    {
+        // If action is a closure, call it
+        if (is_callable($action)) {
+            call_user_func($action, $request, $response);
+        }
+        // If the action is an array (controller and method), call the controller's method
+        if (is_array($action)) {
+            list($controller, $action) = $action;
+            (new $controller)->$action($param);
+        }
+    }
 }

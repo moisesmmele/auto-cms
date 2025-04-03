@@ -4,13 +4,20 @@ namespace Moises\AutoCms\App\Http;
 
 class Request
 {
+    protected $method;
+    protected $uri;
+    protected $query;
+    protected $body;
+    protected $headers;
+    protected $queryParams;
+
     public function __construct()
     {
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->uri = $_SERVER['REQUEST_URI'];
         $this->headers = getallheaders();
         $this->queryParams = $_GET ?? [];
-        $this->postParams = $_POST ?? [];
+        $this->body = $_POST;
     }
 
     public function getMethod(): string
@@ -31,6 +38,11 @@ class Request
     public function getPostParam(string $key, $default = null)
     {
         return $this->postParams[$key] ?? $default;
+    }
+
+    public function getPost()
+    {
+        return $this->postParams;
     }
 
     public function getHeader(string $name, $default = null)

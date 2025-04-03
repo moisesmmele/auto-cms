@@ -13,7 +13,7 @@ class PdoMakeRepository implements MakeRepository
 
     public function __construct()
     {
-        $this->pdo = App::pdo();
+        $this->pdo = App::database()->getConnection();
     }
     public function find(string $id)
     {
@@ -34,6 +34,9 @@ class PdoMakeRepository implements MakeRepository
 
     public function create(array $data)
     {
-        // TODO: Implement create() method.
+        $sql = "INSERT INTO makes (label) VALUES (:label)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(":name", $data["label"]);
+        $stmt->execute();
     }
 }

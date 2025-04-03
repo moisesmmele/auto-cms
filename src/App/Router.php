@@ -20,45 +20,19 @@ class Router
     }
 
     // Dispatch method to handle the request
-    public function dispatch(Request $request, Response $response): void
+    public function dispatch()
     {
-        $requestUri = $request->getUri();
-        $requestMethod = $request->getMethod(); // Get the HTTP method from the request
-
-        foreach ($this->routes as $route) {
-            // Check if the method and URI match
-            if ($requestMethod === $route['method'] && $requestUri === $route['uri']) {
-                // If the action is a Closure, call it
-                if (is_callable($route['action'])) {
-                    call_user_func($route['action'], $request, $response);
-                    return;
-                }
-
-                // If the action is an array (controller and method), call the controller's method
-                if (is_array($route['action'])) {
-                    list($controller, $action) = $route['action'];
-                    (new $controller)->$action($request, $response);
-                    return;
-                }
-            }
-        }
-
-        // If no matching route found, return 404
-        header("HTTP/1.0 404 Not Found");
-        echo "404 Not Found";
-    }
-
-    public function dispatchTest(Request $request, Response $response)
-    {
-        $requestUri = $request->getUri();
-        $requestMethod = $request->getMethod();
+        $requestUri = App::request()->getUri();
+        $requestMethod = App::request()->getMethod();
 
         foreach ($this->routes as $route) {
             $pattern = preg_replace("#\{\w+\}#", "([^/]+)", $route['uri']);
             if (preg_match("#^$pattern$#", $requestUri, $matches)) {
-                $param = $matches[1];
+                if(isset($matches[1])) {
+                    $param = $matches[1];
+                } else { $param = null; }
                 if ($requestMethod === $route['method']) {
-                    $this->callRouteAction($request, $response, $route['action'], $param);
+                    $this->callRouteAction($route['action'], $param);
                     return;
                 }
             }
@@ -68,11 +42,11 @@ class Router
         echo "404 Not Found";
     }
 
-    public function callRouteAction(Request $request, Response $response, $action, $param)
+    public function callRouteAction($action, $param)
     {
         // If action is a closure, call it
         if (is_callable($action)) {
-            call_user_func($action, $request, $response);
+            call_user_func($action);
         }
         // If the action is an array (controller and method), call the controller's method
         if (is_array($action)) {

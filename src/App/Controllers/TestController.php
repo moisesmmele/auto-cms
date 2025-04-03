@@ -2,10 +2,7 @@
 
 namespace Moises\AutoCms\App\Controllers;
 
-use Moises\AutoCms\App\Http\Request;
-use Moises\AutoCms\App\Http\Response;
-
-class TestController
+class TestController extends Controller
 {
     public function index()
     {
@@ -21,5 +18,10 @@ class TestController
     public function dynamicRoute($id)
     {
         echo "this is a dynamic route controller with id $id";
+    }
+
+    public function testing()
+    {
+        var_dump($this);
     }
 }

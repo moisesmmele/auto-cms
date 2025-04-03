@@ -14,7 +14,7 @@ return [
     ],
 
     'all_or_nothing' => true,
-    'transactional' => true,
+    'transactional' => false,
     'check_database_platform' => true,
     'organize_migrations' => 'none',
     'connection' => null,

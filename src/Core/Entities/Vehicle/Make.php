@@ -2,7 +2,7 @@
 
 namespace Moises\AutoCms\Core\Entities\Vehicle;
 
-class VehicleMake
+class Make
 {
     public int $id;
     public string $label;

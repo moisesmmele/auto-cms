@@ -7,7 +7,7 @@ class Vehicle
     public int $id;
     public string $vin;
     public string $licensePlate;
-    public VehicleMake $make;
+    public Make $make;
     public ChassisType $chassisType;
     public FuelType $fuelType;
     public GearboxType $gearboxType;

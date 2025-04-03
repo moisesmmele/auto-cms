@@ -19,6 +19,8 @@ final class BaseSchema extends AbstractMigration
      */
     public function change(): void
     {
+        //TODO: Replace change() method with up() method and add table and column verification before applying changes
+
         $makes = $this->table('makes');
         $makes->addColumn('label', 'string', ['null' => false])
             ->create();
@@ -44,7 +46,8 @@ final class BaseSchema extends AbstractMigration
             ->create();
 
         $image = $this->table('images');
-        $image->addColumn('label', 'string', ['null' => false])
+        $image->addColumn('label', 'string', ['null' => true])
+            ->addColumn('uri', 'string', ['null' => false, 'limit' => 1024])
             ->create();
 
         $vehicle = $this->table('vehicles');
@@ -80,6 +83,22 @@ final class BaseSchema extends AbstractMigration
             ->addColumn('message', 'text', ['null' => false, 'limit' => 65535])
             ->addForeignKey('listing_id', 'listings', 'id')
             ->create();
+
+        //pivot tables
+        $images_vehicles = $this->table('images_vehicles');
+        $images_vehicles->addColumn('vehicle_id', 'integer', ['null' => false, 'signed' => false])
+            ->addColumn('image_id', 'integer', ['null' => false, 'signed' => false])
+            ->addForeignKey('image_id', 'images', 'id')
+            ->addForeignKey('vehicle_id', 'vehicles', 'id')
+            ->create();
+
+        $accessories_vehicles = $this->table('accessories_vehicles');
+        $accessories_vehicles->addColumn('vehicle_id', 'integer', ['null' => false, 'signed' => false])
+            ->addColumn('accessory_id', 'integer', ['null' => false, 'signed' => false])
+            ->addForeignKey('vehicle_id', 'vehicles', 'id')
+            ->addForeignKey('accessory_id', 'accessories', 'id')
+            ->create();
+
 
     }
 }

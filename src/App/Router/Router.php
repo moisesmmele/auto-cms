@@ -1,9 +1,8 @@
 <?php
 
-namespace Moises\AutoCms\App;
+namespace Moises\AutoCms\App\Router;
 
-use Moises\AutoCms\App\Http\Request;
-use Moises\AutoCms\App\Http\Response;
+use Moises\AutoCms\App\App;
 
 class Router
 {
@@ -22,7 +21,7 @@ class Router
     // Dispatch method to handle the request
     public function dispatch()
     {
-        $requestUri = App::request()->getUri();
+        $requestUri = App::request()->getRequestUri();
         $requestMethod = App::request()->getMethod();
 
         foreach ($this->routes as $route) {
@@ -53,5 +52,10 @@ class Router
             list($controller, $action) = $action;
             (new $controller)->$action($param);
         }
+    }
+
+    public function loadRoutes()
+    {
+        require_once "routes.php";
     }
 }

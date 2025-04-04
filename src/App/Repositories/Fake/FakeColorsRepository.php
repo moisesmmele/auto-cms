@@ -1,6 +1,6 @@
 <?php
 
-namespace Moises\AutoCms\App\Repositories\Pdo;
+namespace Moises\AutoCms\App\Repositories\Fake;
 
 use Moises\AutoCms\Core\Repositories\Vehicle\ColorsRepository;
 
@@ -34,5 +34,15 @@ class FakeColorsRepository implements ColorsRepository
     {
         $this->colors[] = $data;
         return $this->colors;
+    }
+
+    public function update(int $id, array $data): array
+    {
+        // TODO: Implement update() method.
+    }
+
+    public function delete(int $id): array
+    {
+        // TODO: Implement delete() method.
     }
 }

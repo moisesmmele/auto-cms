@@ -2,7 +2,8 @@
 
 namespace Moises\AutoCms\App;
 
-use PDO;
+use Moises\AutoCms\App\Container\Container;
+use Moises\AutoCms\App\Router\Router;
 
 class App
 {

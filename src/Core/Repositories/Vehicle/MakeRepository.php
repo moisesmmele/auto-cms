@@ -2,9 +2,8 @@
 
 namespace Moises\AutoCms\Core\Repositories\Vehicle;
 
-interface MakeRepository
+use Moises\AutoCms\Core\Repositories\Repository;
+
+interface MakeRepository extends Repository
 {
-    public function find(string $id);
-    public function all();
-    public function create(array $data);
 }

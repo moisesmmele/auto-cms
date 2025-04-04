@@ -2,6 +2,8 @@
 
 namespace Moises\AutoCms\App\Controllers;
 
+use Moises\AutoCms\App\App;
+
 class TestController extends Controller
 {
     public function index()
@@ -22,6 +24,6 @@ class TestController extends Controller
 
     public function testing()
     {
-        var_dump($this);
+        var_dump(App::request()->getRequestUri());
     }
 }

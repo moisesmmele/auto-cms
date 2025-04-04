@@ -22,9 +22,27 @@ class MakeController extends Controller
         echo json_encode($vehicles);
     }
 
-    public function store(string $jsonData)
+    public function show($id)
     {
-        $data = json_decode($jsonData);
-        $this->response()->send();
+        $vehicle = $this->repository->find($id);
+        echo json_encode($vehicle);
+    }
+    public function store()
+    {
+        $data = json_decode(App::request()->getContent(), true);
+        $result = $this->repository->create($data);
+        echo json_encode($result);
+    }
+
+    public function update($id)
+    {
+        $data = json_decode(App::request()->getContent(), true);
+        $result = $this->repository->update($id, $data);
+        echo json_encode($result);
+    }
+    public function destroy($id)
+    {
+        $result = $this->repository->delete($id);
+        echo json_encode($result);
     }
 }

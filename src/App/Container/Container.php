@@ -1,6 +1,6 @@
 <?php
 
-namespace Moises\AutoCms\App;
+namespace Moises\AutoCms\App\Container;
 
 class Container
 {
@@ -59,8 +59,9 @@ class Container
         return $reflectionClass->newInstanceArgs($classDependencies);
     }
 
-    public static function build()
+    public function loadBindings(): void
     {
-        return require_once __DIR__ . "/config.php";
+        $bindings = require_once __DIR__ . "/bindings.php";
+        foreach ($bindings as $id => $concrete) $this->set($id, $concrete);
     }
 }

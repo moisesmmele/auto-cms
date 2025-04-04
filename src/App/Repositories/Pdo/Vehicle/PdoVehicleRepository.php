@@ -28,8 +28,8 @@ class PdoVehicleRepository extends PdoRepository implements VehicleRepository
         $stmt->bindParam(':model_year', $data['model_year']);
         $stmt->bindParam(':mileage', $data['mileage']);
         $stmt->bindParam(':description', $data['description']);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->execute();
+        return ["result" => $result];
     }
 
     public function update(int $id, array $data): array
@@ -52,8 +52,8 @@ class PdoVehicleRepository extends PdoRepository implements VehicleRepository
         $stmt->bindParam(':mileage', $data['mileage']);
         $stmt->bindParam(':description', $data['description']);
         $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->execute();
+        return ["result" => $result];
     }
 
     public function delete(int $id): array
@@ -62,7 +62,8 @@ class PdoVehicleRepository extends PdoRepository implements VehicleRepository
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->execute();
+        return ["result" => $result];
     }
 
     public function all(): array

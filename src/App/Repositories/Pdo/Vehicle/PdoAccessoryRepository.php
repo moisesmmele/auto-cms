@@ -14,8 +14,8 @@ class PdoAccessoryRepository extends PdoRepository implements AccessoryRepositor
         $sql = "insert into accessories (label) values (:label)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':label', $data['label']);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->execute();
+        return ["result" => $result];
     }
 
     public function update(int $id, array $data): array
@@ -24,8 +24,8 @@ class PdoAccessoryRepository extends PdoRepository implements AccessoryRepositor
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':label', $data['label']);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->execute();
+        return ["result" => $result];
     }
 
     public function delete(int $id): array
@@ -33,8 +33,8 @@ class PdoAccessoryRepository extends PdoRepository implements AccessoryRepositor
         $sql = "delete from accessories where  id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->execute();
+        return ["result" => $result];
     }
 
     public function all(): array

@@ -14,8 +14,8 @@ class PdoGearboxTypeRepository extends PdoRepository implements GearboxTypeRepos
         $sql = "insert into gearbox_types (label) values (:label)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':label', $data['label']);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->execute();
+        return ["result" => $result];
     }
 
     public function update(int $id, array $data): array
@@ -24,8 +24,8 @@ class PdoGearboxTypeRepository extends PdoRepository implements GearboxTypeRepos
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':label', $data['label']);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->execute();
+        return ["result" => $result];
     }
 
     public function delete(int $id): array
@@ -33,8 +33,8 @@ class PdoGearboxTypeRepository extends PdoRepository implements GearboxTypeRepos
         $sql = "delete from gearbox_types where id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->execute();
+        return ["result" => $result];
     }
 
     public function all(): array

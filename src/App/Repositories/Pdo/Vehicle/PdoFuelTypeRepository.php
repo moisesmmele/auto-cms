@@ -14,8 +14,8 @@ class PdoFuelTypeRepository extends PdoRepository implements FuelTypeRepository
         $sql = "INSERT INTO fuel_types (label) VALUES(:label)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':label', $data['label']);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->execute();
+        return ["result" => $result];
     }
 
     public function update(int $id, array $data): array
@@ -24,8 +24,8 @@ class PdoFuelTypeRepository extends PdoRepository implements FuelTypeRepository
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':label', $data['label']);
         $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->execute();
+        return ["result" => $result];
     }
 
     public function delete(int $id): array
@@ -33,8 +33,8 @@ class PdoFuelTypeRepository extends PdoRepository implements FuelTypeRepository
         $sql = "DELETE FROM fuel_types WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->execute();
+        return ["result" => $result];
     }
 
     public function all(): array

@@ -4,7 +4,7 @@ namespace Moises\AutoCms\Core\Entities\Vehicle;
 
 class Accessory
 {
-    readonly string $id;
+    readonly int $id;
     readonly string $label;
     readonly string $description;
     public function __construct(int $id, string $label, string $description)

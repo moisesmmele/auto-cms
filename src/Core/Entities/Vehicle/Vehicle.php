@@ -104,6 +104,10 @@ class Vehicle
     {
         return $this->make;
     }
+    public function getMakeId(): int
+    {
+        return $this->makeId;
+    }
     public function getChassisType(): ChassisType
     {
         return $this->chassisType;
@@ -147,5 +151,21 @@ class Vehicle
     public function getImages(): array
     {
         return $this->images;
+    }
+    public function getChassisTypeId(): int
+    {
+        return $this->chassisTypeId;
+    }
+    public function getColorId(): int
+    {
+        return $this->colorId;
+    }
+    public function getFuelTypeId(): int
+    {
+        return $this->fuelTypeId;
+    }
+    public function getGearboxTypeId(): int
+    {
+        return $this->gearboxTypeId;
     }
 }

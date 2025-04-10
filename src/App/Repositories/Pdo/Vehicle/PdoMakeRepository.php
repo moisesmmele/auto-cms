@@ -16,7 +16,7 @@ class PdoMakeRepository extends PdoRepository implements MakeRepository
         $stmt->bindParam(":id", $id);
         $stmt->execute();
         $make = $stmt->fetch(PDO::FETCH_ASSOC);
-        return new Make($make['id'], $make['name']);
+        return new Make($make['id'], $make['label']);
     }
     public function all(): array
     {

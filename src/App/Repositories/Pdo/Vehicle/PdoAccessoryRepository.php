@@ -16,7 +16,7 @@ class PdoAccessoryRepository extends PdoRepository implements AccessoryRepositor
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':label', $data['label']);
         $stmt->execute();
-        return $this->find($this->pdo->lastInsertId());
+        return $this->find($data['id']);
     }
 
     public function update(int $id, array $data): Accessory
@@ -26,7 +26,7 @@ class PdoAccessoryRepository extends PdoRepository implements AccessoryRepositor
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':label', $data['label']);
         $stmt->execute();
-        return $this->find($this->pdo->lastInsertId());
+        return $this->find($data['id']);
     }
 
     public function delete(int $id): bool

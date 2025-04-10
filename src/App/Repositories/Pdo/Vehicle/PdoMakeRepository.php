@@ -3,49 +3,59 @@
 namespace Moises\AutoCms\App\Repositories\Pdo\Vehicle;
 
 use Moises\AutoCms\App\Repositories\Pdo\PdoRepository;
+use Moises\AutoCms\Core\Entities\Vehicle\Make;
 use Moises\AutoCms\Core\Repositories\Vehicle\MakeRepository;
 use PDO;
 
 class PdoMakeRepository extends PdoRepository implements MakeRepository
 {
-    public function find(int $id): array
+    public function find(int $id): Make
     {
         $sql = "SELECT * FROM makes where id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(":id", $id);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $make = $stmt->fetch(PDO::FETCH_ASSOC);
+        return new Make($make['id'], $make['name']);
     }
     public function all(): array
     {
         $sql = "SELECT * FROM makes";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $makes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $newMakes = [];
+        foreach ($makes as $make) {
+            $newMakes[] = new Make($make['id'], $make['name']);
+        }
+        return $newMakes;
     }
-    public function create(array $data): array
+    public function create(array $data): Make
     {
         $sql = "INSERT INTO makes (label) VALUES (:label)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(":label", $data["label"]);
-        $result = $stmt->execute();
-        return ["result" => $result];
+        $stmt->execute();
+        return $this->find($data['id']);
     }
-    public function update(int $id, array $data): array
+    public function update(int $id, array $data): Make
     {
         $sql = "UPDATE makes SET label = :label WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(":id", $id);
         $stmt->bindParam(":label", $data["label"]);
-        $result = $stmt->execute();
-        return ["result" => $result];
+        $stmt->execute();
+        return $this->find($data['id']);
     }
-    public function delete(int $id): array
+    public function delete(int $id): bool
     {
         $sql = "DELETE FROM makes WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(":id", $id);
-        $result = $stmt->execute();
-        return ["result" => $result];
+        $stmt->execute();
+        if ($stmt->rowCount() > 0) {
+            return true;
+        }
+        return false;
     }
 }

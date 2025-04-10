@@ -3,38 +3,42 @@
 namespace Moises\AutoCms\App\Repositories\Pdo\Vehicle;
 
 use Moises\AutoCms\App\Repositories\Pdo\PdoRepository;
+use Moises\AutoCms\Core\Entities\Vehicle\FuelType;
 use Moises\AutoCms\Core\Repositories\Vehicle\FuelTypeRepository;
 use PDO;
 
 class PdoFuelTypeRepository extends PdoRepository implements FuelTypeRepository
 {
 
-    public function create(array $data): array
+    public function create(array $data): FuelType
     {
         $sql = "INSERT INTO fuel_types (label) VALUES(:label)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':label', $data['label']);
-        $result = $stmt->execute();
-        return ["result" => $result];
+        $stmt->execute();
+        return $this->find($data['id']);
     }
 
-    public function update(int $id, array $data): array
+    public function update(int $id, array $data): FuelType
     {
         $sql = "UPDATE fuel_types SET label = :label WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':label', $data['label']);
         $stmt->bindParam(':id', $id);
-        $result = $stmt->execute();
-        return ["result" => $result];
+        $stmt->execute();
+        return $this->find($data['id']);
     }
 
-    public function delete(int $id): array
+    public function delete(int $id): bool
     {
         $sql = "DELETE FROM fuel_types WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
-        $result = $stmt->execute();
-        return ["result" => $result];
+        $stmt->execute();
+        if ($stmt->rowCount() == 1) {
+            return true;
+        }
+        return false;
     }
 
     public function all(): array
@@ -42,15 +46,21 @@ class PdoFuelTypeRepository extends PdoRepository implements FuelTypeRepository
         $sql = "SELECT * FROM fuel_types";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $fuelTypes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $newFuelTypes = [];
+        foreach ($fuelTypes as $fuelType) {
+            $newFuelTypes[] = new FuelType(id: $fuelType['id'], label: $fuelType['label']);
+        }
+        return $newFuelTypes;
     }
 
-    public function find(int $id): array
+    public function find(int $id): FuelType
     {
         $sql = "SELECT * FROM fuel_types WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $fuelType = $stmt->fetch(PDO::FETCH_ASSOC);
+        return new FuelType(id: $id, label: $fuelType['label']);
     }
 }

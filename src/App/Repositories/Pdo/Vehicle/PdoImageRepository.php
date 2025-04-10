@@ -3,39 +3,43 @@
 namespace Moises\AutoCms\App\Repositories\Pdo\Vehicle;
 
 use Moises\AutoCms\App\Repositories\Pdo\PdoRepository;
+use Moises\AutoCms\Core\Entities\Vehicle\Image;
 use Moises\AutoCms\Core\Repositories\Vehicle\ImageRepository;
 use PDO;
 
 class PdoImageRepository extends PdoRepository implements ImageRepository
 {
 
-    public function create(array $data): array
+    public function create(array $data): Image
     {
         $sql = "insert into images (label, uri) values (:label, :uri)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':label', $data['label']);
         $stmt->bindParam(':uri', $data['uri']);
-        $result = $stmt->execute();
-        return ["result" => $result];
+        $stmt->execute();
+        return $this->find($data['id']);
     }
 
-    public function update(int $id, array $data): array
+    public function update(int $id, array $data): Image
     {
         $sql = "update images set label = :label, uri = :uri where id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':label', $data['label']);
         $stmt->bindParam(':uri', $data['uri']);
         $stmt->bindParam(':id', $id);
-        $result = $stmt->execute();
-        return ["result" => $result];    }
-
-    public function delete(int $id): array
+        $stmt->execute();
+        return $this->find($data['id']);
+    }
+    public function delete(int $id): bool
     {
         $sql = "delete from images where id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
-        $result = $stmt->execute();
-        return ["result" => $result];
+        $stmt->execute();
+        if ($stmt->rowCount() == 1) {
+            return true;
+        }
+        return false;
     }
 
     public function all(): array
@@ -43,15 +47,21 @@ class PdoImageRepository extends PdoRepository implements ImageRepository
         $sql = "select * from images";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $newImages = [];
+        foreach ($images as $image) {
+            $newImages[] = new Image(id: $image['id'], label: $image['label'], uri: $image['uri']);
+        }
+        return $newImages;
     }
 
-    public function find(int $id): array
+    public function find(int $id): Image
     {
         $sql = "select * from images where id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $image = $stmt->fetch(PDO::FETCH_ASSOC);
+        return new Image(id: $image['id'], label: $image['label'], uri: $image['uri']);
     }
 }

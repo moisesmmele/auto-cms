@@ -3,13 +3,14 @@
 namespace Moises\AutoCms\App\Repositories\Pdo\Vehicle;
 
 use Moises\AutoCms\App\Repositories\Pdo\PdoRepository;
+use Moises\AutoCms\Core\Entities\Vehicle\Vehicle;
 use Moises\AutoCms\Core\Repositories\Vehicle\VehicleRepository;
 use PDO;
 
 class PdoVehicleRepository extends PdoRepository implements VehicleRepository
 {
 
-    public function create(array $data): array
+    public function create(array $data): Vehicle
     {
         $sql = "insert into vehicles (vin, license_plate, make_id, chassis_type_id, fuel_type_id,
                       gearbox_type_id, color_id, model, model_year, mileage, description) 
@@ -28,11 +29,11 @@ class PdoVehicleRepository extends PdoRepository implements VehicleRepository
         $stmt->bindParam(':model_year', $data['model_year']);
         $stmt->bindParam(':mileage', $data['mileage']);
         $stmt->bindParam(':description', $data['description']);
-        $result = $stmt->execute();
-        return ["result" => $result];
+        $stmt->execute();
+        return $this->find($data['id']);
     }
 
-    public function update(int $id, array $data): array
+    public function update(int $id, array $data): Vehicle
     {
         $sql = "update vehicles set vin = :vin, license_plate = :license_plate, make_id = :make_id, 
                     chassis_type_id = :chassis_type_id, fuel_type_id = :fuel_type_id, 
@@ -51,72 +52,104 @@ class PdoVehicleRepository extends PdoRepository implements VehicleRepository
         $stmt->bindParam(':model_year', $data['model_year']);
         $stmt->bindParam(':mileage', $data['mileage']);
         $stmt->bindParam(':description', $data['description']);
-        $stmt->bindParam(':id', $id);
-        $result = $stmt->execute();
-        return ["result" => $result];
+        $stmt->bindParam(':id', $data['id']);
+        $stmt->execute();
+        return $this->find($id);
     }
 
-    public function delete(int $id): array
+    public function delete(int $id): bool
     {
         $sql = "delete from vehicles where id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        $result = $stmt->execute();
-        return ["result" => $result];
+        if ($stmt->rowCount() > 0) {
+            return true;
+        }
+        return false;
     }
 
     public function all(): array
     {
-        $sql = "SELECT
-                    v.id,
-                    v.vin,
-                    v.license_plate,
-                    m.label AS make,
-                    v.model,
-                    v.model_year,
-                    v.mileage,
-                    v.description,
-                    c.label AS color,
-                    ct.label AS chassis_type,
-                    ft.label AS fuel_type,
-                    gt.label AS gearbox_type
-                FROM vehicles v
-                JOIN makes m ON v.make_id = m.id
-                JOIN colors c ON v.color_id = c.id
-                JOIN chassis_types ct ON v.chassis_type_id = ct.id
-                JOIN fuel_types ft ON v.fuel_type_id = ft.id
-                JOIN gearbox_types gt ON v.gearbox_type_id = gt.id";
+        $sql = "SELECT * FROM vehicles";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $vehicles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $newVehicles = [];
+        foreach ($vehicles as $vehicle) {
+            $images = $this->findImages($vehicle['id']);
+            $accessories = $this->findAccessories($vehicle['id']);
+            $newVehicles[] = new Vehicle(
+                id: $vehicle['id'],
+                vin: $vehicle['vin'],
+                licensePlate: $vehicle['license_plate'],
+                makeId: $vehicle['make_id'],
+                chassisTypeId: $vehicle['chassis_type_id'],
+                fuelTypeId: $vehicle['fuel_type_id'],
+                gearboxTypeId: $vehicle['gearbox_type_id'],
+                colorId: $vehicle['color_id'],
+                model: $vehicle['model'],
+                modelYear: $vehicle['model_year'],
+                mileage: $vehicle['mileage'],
+                description: $vehicle['description'],
+                accessoriesIds: $accessories,
+                imagesIds: $images
+            );
+        }
+        return $newVehicles;
     }
 
-    public function find(int $id): array
+    public function find(int $id): Vehicle
     {
-        $sql = "SELECT
-                v.id,
-                v.vin,
-                v.license_plate,
-                m.label AS make,
-                v.model,
-                v.model_year,
-                v.mileage,
-                v.description,
-                c.label AS color,
-                ct.label AS chassis_type,
-                ft.label AS fuel_type,
-                gt.label AS gearbox_type
-            FROM vehicles v
-            JOIN makes m ON v.make_id = m.id
-            JOIN colors c ON v.color_id = c.id
-            JOIN chassis_types ct ON v.chassis_type_id = ct.id
-            JOIN fuel_types ft ON v.fuel_type_id = ft.id
-            JOIN gearbox_types gt ON v.gearbox_type_id = gt.id
-            WHERE v.id = :id";
+        $sql = "SELECT * FROM vehicles where id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $vehicle = $stmt->fetch(PDO::FETCH_ASSOC);
+        $images = $this->findImages($id);
+        $accessories = $this->findAccessories($id);
+        return new Vehicle(
+            id: $vehicle['id'],
+            vin: $vehicle['vin'],
+            licensePlate: $vehicle['license_plate'],
+            makeId: $vehicle['make_id'],
+            chassisTypeId: $vehicle['chassis_type_id'],
+            fuelTypeId: $vehicle['fuel_type_id'],
+            gearboxTypeId: $vehicle['gearbox_type_id'],
+            colorId: $vehicle['color_id'],
+            model: $vehicle['model'],
+            modelYear: $vehicle['model_year'],
+            mileage: $vehicle['mileage'],
+            description: $vehicle['description'],
+            accessoriesIds: $accessories,
+            imagesIds: $images
+        );
+    }
+    public function findImages($vehicleId): array
+    {
+        $sql = "SELECT * from images_vehicles where vehicle_id = :vehicleId";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':vehicleId', $vehicleId);
+        $stmt->execute();
+        $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $newImages = [];
+        foreach ($images as $image) {
+            $newImages[] = $image['id'];
+        }
+        return $newImages;
+    }
+
+    public function findAccessories($vehicleId): array
+    {
+        $sql = "SELECT * from accessories_vehicles where vehicle_id = :vehicleId";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':vehicleId', $vehicleId);
+        $stmt->execute();
+        $accessories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $newAccessories = [];
+        foreach ($accessories as $accessory) {
+            $newAccessories[] = $accessory['id'];
+        }
+        return $newAccessories;
     }
 }

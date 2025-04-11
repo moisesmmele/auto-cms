@@ -22,9 +22,9 @@ class Vehicle
     private string $mileage;
     private string $description;
     readonly array $accessoriesIds;
-    private array $accessories; // array of Accessory obj
+    private array $accessories = []; // array of Accessory obj
     readonly array $imagesIds;
-    private array $images; // array of VehicleImage obj
+    private array $images = []; // array of VehicleImage obj
     public function __construct(
         string $id,
         string $vin,

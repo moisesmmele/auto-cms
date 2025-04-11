@@ -30,7 +30,11 @@ class PdoVehicleRepository extends PdoRepository implements VehicleRepository
         $stmt->bindParam(':mileage', $data['mileage']);
         $stmt->bindParam(':description', $data['description']);
         $stmt->execute();
-        return $this->find($this->pdo->lastInsertId());
+        $vehicleId = $this->pdo->lastInsertId();
+        $this->addAccessories($vehicleId, $data['accessories']);
+        $this->addImages($vehicleId, $data['images']);
+
+        return $this->find($vehicleId);
     }
 
     public function update(int $id, array $data): Vehicle
@@ -151,5 +155,27 @@ class PdoVehicleRepository extends PdoRepository implements VehicleRepository
             $newAccessories[] = $accessory['id'];
         }
         return $newAccessories;
+    }
+
+    public function addAccessories($vehicleId, array $accessories)
+    {
+        foreach ($accessories as $accessoryId) {
+            $sql = "INSERT INTO accessories_vehicles (vehicle_id, accessory_id) VALUES (:vehicle_id, :accessory_id)";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':vehicle_id', $vehicleId);
+            $stmt->bindParam(':accessory_id', $accessoryId);
+            $stmt->execute();
+        }
+    }
+
+    public function addImages(string $vehicleId, mixed $images)
+    {
+        foreach ($images as $imageId) {
+            $sql = "INSERT INTO images_vehicles (vehicle_id, image_id) VALUES (:vehicle_id, :image_id)";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':vehicle_id', $vehicleId);
+            $stmt->bindParam(':image_id', $imageId);
+            $stmt->execute();
+        }
     }
 }

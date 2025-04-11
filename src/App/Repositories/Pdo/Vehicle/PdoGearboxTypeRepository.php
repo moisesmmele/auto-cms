@@ -16,7 +16,7 @@ class PdoGearboxTypeRepository extends PdoRepository implements GearboxTypeRepos
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':label', $data['label']);
         $stmt->execute();
-        return $this->find($data['id']);
+        return $this->find($this->pdo->lastInsertId());
     }
 
     public function update(int $id, array $data): GearboxType
@@ -26,7 +26,7 @@ class PdoGearboxTypeRepository extends PdoRepository implements GearboxTypeRepos
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':label', $data['label']);
         $stmt->execute();
-        return $this->find($data['id']);
+        return $this->find($id);
     }
 
     public function delete(int $id): bool

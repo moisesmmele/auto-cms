@@ -16,7 +16,7 @@ class PdoFuelTypeRepository extends PdoRepository implements FuelTypeRepository
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':label', $data['label']);
         $stmt->execute();
-        return $this->find($data['id']);
+        return $this->find($this->pdo->lastInsertId());
     }
 
     public function update(int $id, array $data): FuelType
@@ -26,7 +26,7 @@ class PdoFuelTypeRepository extends PdoRepository implements FuelTypeRepository
         $stmt->bindParam(':label', $data['label']);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        return $this->find($data['id']);
+        return $this->find($id);
     }
 
     public function delete(int $id): bool

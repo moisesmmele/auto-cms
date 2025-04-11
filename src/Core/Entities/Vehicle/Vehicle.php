@@ -24,7 +24,7 @@ class Vehicle
     readonly array $accessoriesIds;
     private array $accessories; // array of Accessory obj
     readonly array $imagesIds;
-    private array $images; // array of Image obj
+    private array $images; // array of VehicleImage obj
     public function __construct(
         string $id,
         string $vin,
@@ -87,7 +87,7 @@ class Vehicle
         $this->accessories[] = $accessory;
         return $this;
     }
-    public function assignImage(Image $image): self
+    public function assignVehicleImage(VehicleImage $image): self
     {
         $this->images[] = $image;
         return $this;
@@ -167,5 +167,10 @@ class Vehicle
     public function getGearboxTypeId(): int
     {
         return $this->gearboxTypeId;
+    }
+
+    public function getLicensePlate(): string
+    {
+        return $this->licensePlate;
     }
 }

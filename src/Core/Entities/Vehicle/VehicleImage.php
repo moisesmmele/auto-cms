@@ -2,7 +2,7 @@
 
 namespace Moises\AutoCms\Core\Entities\Vehicle;
 
-class Image
+class VehicleImage
 {
     readonly int $id;
     readonly string $label;

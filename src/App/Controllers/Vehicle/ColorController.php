@@ -4,45 +4,47 @@ namespace Moises\AutoCms\App\Controllers\Vehicle;
 
 use Moises\AutoCms\App\App;
 use Moises\AutoCms\App\Controllers\Controller;
-use Moises\AutoCms\App\Services\Vehicle\MakeService;
+use Moises\AutoCms\App\Services\Vehicle\ColorService;
 
-class MakeController extends Controller
+class ColorController extends Controller
 {
-    private MakeService $service;
+    private ColorService $service;
 
     public function __construct()
     {
         parent::__construct();
-        $this->service = App::container()->get(MakeService::class);
+        $this->service = App::container()->get(ColorService::class);
     }
 
     public function index()
     {
-        $makes = $this->service->getAllMakes();
-        echo json_encode($makes);
+        $colors = $this->service->getAllColors();
+        echo json_encode($colors);
     }
 
     public function show($id)
     {
-        $make = $this->service->getMake($id);
-        echo json_encode($make);
+        $color = $this->service->getColor($id);
+        echo json_encode($color);
     }
+
     public function store()
     {
         $data = json_decode(App::request()->getContent(), true);
-        $result = $this->service->createNewMake($data);
+        $result = $this->service->createNewColor($data);
         echo json_encode($result);
     }
 
     public function update($id)
     {
         $data = json_decode(App::request()->getContent(), true);
-        $result = $this->service->updateMake(data: $data, makeId: $id);
+        $result = $this->service->updateColor(data: $data, colorId: $id);
         echo json_encode($result);
     }
+
     public function destroy($id)
     {
-        $result = $this->service->deleteMake($id);
+        $result = $this->service->deleteColor($id);
         echo json_encode($result);
     }
 }

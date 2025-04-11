@@ -26,7 +26,7 @@ class PdoMakeRepository extends PdoRepository implements MakeRepository
         $makes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $newMakes = [];
         foreach ($makes as $make) {
-            $newMakes[] = new Make($make['id'], $make['name']);
+            $newMakes[] = new Make($make['id'], $make['label']);
         }
         return $newMakes;
     }
@@ -36,7 +36,7 @@ class PdoMakeRepository extends PdoRepository implements MakeRepository
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(":label", $data["label"]);
         $stmt->execute();
-        return $this->find($data['id']);
+        return $this->find($this->pdo->lastInsertId());
     }
     public function update(int $id, array $data): Make
     {
@@ -45,7 +45,7 @@ class PdoMakeRepository extends PdoRepository implements MakeRepository
         $stmt->bindParam(":id", $id);
         $stmt->bindParam(":label", $data["label"]);
         $stmt->execute();
-        return $this->find($data['id']);
+        return $this->find($id);
     }
     public function delete(int $id): bool
     {

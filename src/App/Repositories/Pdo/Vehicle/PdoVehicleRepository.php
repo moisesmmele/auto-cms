@@ -30,7 +30,7 @@ class PdoVehicleRepository extends PdoRepository implements VehicleRepository
         $stmt->bindParam(':mileage', $data['mileage']);
         $stmt->bindParam(':description', $data['description']);
         $stmt->execute();
-        return $this->find($data['id']);
+        return $this->find($this->pdo->lastInsertId());
     }
 
     public function update(int $id, array $data): Vehicle

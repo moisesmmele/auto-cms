@@ -21,17 +21,17 @@ class PdoChassisTypeRepository extends PdoRepository implements ChassisTypeRepos
 
     public function update(int $id, array $data): ChassisType
     {
-        $sql = "UPDATE chassis_type SET label = :label WHERE id = :id";
+        $sql = "UPDATE chassis_types SET label = :label WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':label', $data['label']);
         $stmt->execute();
-        return $this->find($this->pdo->lastInsertId());
+        return $this->find($id);
     }
 
     public function delete(int $id): bool
     {
-        $sql = "DELETE FROM chassis_type WHERE id = :id";
+        $sql = "DELETE FROM chassis_types WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
@@ -43,7 +43,7 @@ class PdoChassisTypeRepository extends PdoRepository implements ChassisTypeRepos
 
     public function all(): array
     {
-        $sql = "SELECT * FROM chassis_type";
+        $sql = "SELECT * FROM chassis_types";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         $chassisTypes = $stmt->fetchAll(PDO::FETCH_ASSOC);

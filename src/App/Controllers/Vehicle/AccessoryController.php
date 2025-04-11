@@ -4,45 +4,47 @@ namespace Moises\AutoCms\App\Controllers\Vehicle;
 
 use Moises\AutoCms\App\App;
 use Moises\AutoCms\App\Controllers\Controller;
-use Moises\AutoCms\App\Services\Vehicle\MakeService;
+use Moises\AutoCms\App\Services\Vehicle\AccessoryService;
 
-class MakeController extends Controller
+class AccessoryController extends Controller
 {
-    private MakeService $service;
+    private AccessoryService $service;
 
     public function __construct()
     {
         parent::__construct();
-        $this->service = App::container()->get(MakeService::class);
+        $this->service = App::container()->get(AccessoryService::class);
     }
 
     public function index()
     {
-        $makes = $this->service->getAllMakes();
-        echo json_encode($makes);
+        $accessories = $this->service->getAllAccessories();
+        echo json_encode($accessories);
     }
 
     public function show($id)
     {
-        $make = $this->service->getMake($id);
-        echo json_encode($make);
+        $accessory = $this->service->getAccessory($id);
+        echo json_encode($accessory);
     }
+
     public function store()
     {
         $data = json_decode(App::request()->getContent(), true);
-        $result = $this->service->createNewMake($data);
+        $result = $this->service->createNewAccessory($data);
         echo json_encode($result);
     }
 
     public function update($id)
     {
         $data = json_decode(App::request()->getContent(), true);
-        $result = $this->service->updateMake(data: $data, makeId: $id);
+        $result = $this->service->updateAccessory(data: $data, accessoryId: $id);
         echo json_encode($result);
     }
+
     public function destroy($id)
     {
-        $result = $this->service->deleteMake($id);
+        $result = $this->service->deleteAccessory($id);
         echo json_encode($result);
     }
 }

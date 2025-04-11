@@ -26,7 +26,7 @@ class PdoColorRepository extends PdoRepository implements ColorRepository
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':label', $data['label']);
         $stmt->execute();
-        return $this->find($this->pdo->lastInsertId());
+        return $this->find($id);
     }
 
     public function delete(int $id): bool

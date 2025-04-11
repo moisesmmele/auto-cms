@@ -4,45 +4,47 @@ namespace Moises\AutoCms\App\Controllers\Vehicle;
 
 use Moises\AutoCms\App\App;
 use Moises\AutoCms\App\Controllers\Controller;
-use Moises\AutoCms\App\Services\Vehicle\MakeService;
+use Moises\AutoCms\App\Services\Vehicle\GearboxTypeService;
 
-class MakeController extends Controller
+class GearboxTypeController extends Controller
 {
-    private MakeService $service;
+    private GearboxTypeService $service;
 
     public function __construct()
     {
         parent::__construct();
-        $this->service = App::container()->get(MakeService::class);
+        $this->service = App::container()->get(GearboxTypeService::class);
     }
 
     public function index()
     {
-        $makes = $this->service->getAllMakes();
-        echo json_encode($makes);
+        $gearboxes = $this->service->getAllGearboxTypes();
+        echo json_encode($gearboxes);
     }
 
     public function show($id)
     {
-        $make = $this->service->getMake($id);
-        echo json_encode($make);
+        $gearbox = $this->service->getGearboxType($id);
+        echo json_encode($gearbox);
     }
+
     public function store()
     {
         $data = json_decode(App::request()->getContent(), true);
-        $result = $this->service->createNewMake($data);
+        $result = $this->service->createNewGearboxType($data);
         echo json_encode($result);
     }
 
     public function update($id)
     {
         $data = json_decode(App::request()->getContent(), true);
-        $result = $this->service->updateMake(data: $data, makeId: $id);
+        $result = $this->service->updateGearboxType(data: $data, gearboxTypeId: $id);
         echo json_encode($result);
     }
+
     public function destroy($id)
     {
-        $result = $this->service->deleteMake($id);
+        $result = $this->service->deleteGearboxType($id);
         echo json_encode($result);
     }
 }

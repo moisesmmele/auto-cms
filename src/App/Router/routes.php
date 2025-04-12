@@ -2,7 +2,6 @@
 
 use Moises\AutoCms\App\App;
 
-use Moises\AutoCms\App\Controllers\TestController;
 use Moises\AutoCms\App\Controllers\Vehicle\AccessoryController;
 use Moises\AutoCms\App\Controllers\Vehicle\ChassisTypeController;
 use Moises\AutoCms\App\Controllers\Vehicle\ColorController;
@@ -66,4 +65,3 @@ App::router()->register('POST', '/vehicle-images', [VehicleImageController::clas
 App::router()->register('GET', '/vehicle-images/{id}', [VehicleImageController::class, 'show']);
 App::router()->register('DELETE', '/vehicle-images/{id}', [VehicleImageController::class, 'destroy']);
 App::router()->register('GET', '/vehicles/{vehicleId}/images', [VehicleImageController::class, 'getByVehicle']);
-App::router()->register('GET', '/vehicles', [VehicleController::class, 'index']);

@@ -142,7 +142,7 @@ class Vehicle
     }
     public function getAccessoriesIds(): array
     {
-        return $this->accessories;
+        return $this->accessoriesIds;
     }
     public function getAccessories(): array
     {
@@ -172,5 +172,13 @@ class Vehicle
     public function getLicensePlate(): string
     {
         return $this->licensePlate;
+    }
+
+    /**
+     * @return array
+     */
+    public function getImagesIds(): array
+    {
+        return $this->imagesIds;
     }
 }

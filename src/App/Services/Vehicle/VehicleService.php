@@ -49,17 +49,15 @@ class VehicleService
                 ->assignGearboxType($this->gearboxTypeRepository->find($vehicle->getGearboxTypeId()))
                 ->assignChassisType($this->chassisTypeRepository->find($vehicle->getChassisTypeId()));
 
-#            foreach ($vehicle->accessoriesIds as $accessoryId) {
-#                $accessory = $this->accessoryRepository->find($accessoryId);
-#                dump($accessory);
-#                $vehicle->assignAccessory($accessory);
-#            }
+            foreach ($vehicle->getAccessoriesIds() as $accessoryId) {
+                $accessory = $this->accessoryRepository->find($accessoryId);
+                $vehicle->assignAccessory($accessory);
+            }
 
-#            foreach ($vehicle->imagesIds as $imageId) {
-#                $image = $this->imageRepository->find($imageId);
-#                dump($image);
-#                $vehicle->assignImage($image);
-#            }
+            foreach ($vehicle->getImagesIds() as $imageId) {
+                $image = $this->imageRepository->find($imageId);
+                $vehicle->assignVehicleImage($image);
+            }
             $newVehicles[] = $vehicle;
         }
         return $newVehicles;
@@ -75,21 +73,37 @@ class VehicleService
             ->assignGearboxType($this->gearboxTypeRepository->find($vehicle->getGearboxTypeId()))
             ->assignChassisType($this->chassisTypeRepository->find($vehicle->getChassisTypeId()));
 
-        //TODO: assign images and accessories
+        foreach ($vehicle->getAccessoriesIds() as $accessoryId) {
+            $accessory = $this->accessoryRepository->find($accessoryId);
+            $vehicle->assignAccessory($accessory);
+        }
 
+        foreach ($vehicle->getImagesIds() as $imageId) {
+            $image = $this->imageRepository->find($imageId);
+            $vehicle->assignVehicleImage($image);
+        }
         return $vehicle;
     }
 
     public function updateVehicle(int $id, array $data): Vehicle
     {
         $vehicle = $this->vehicleRepository->update(id: $id, data: $data);
+
         $vehicle->assignMake($this->makeRepository->find($vehicle->getMakeId()))
             ->assignColor($this->colorRepository->find($vehicle->getColorId()))
             ->assignFuelType($this->fuelTypeRepository->find($vehicle->getFuelTypeId()))
             ->assignGearboxType($this->gearboxTypeRepository->find($vehicle->getGearboxTypeId()))
             ->assignChassisType($this->chassisTypeRepository->find($vehicle->getChassisTypeId()));
 
-        //TODO: assign images and accessories
+        foreach ($vehicle->getAccessoriesIds() as $accessoryId) {
+            $accessory = $this->accessoryRepository->find($accessoryId);
+            $vehicle->assignAccessory($accessory);
+        }
+
+        foreach ($vehicle->getImagesIds() as $imageId) {
+            $image = $this->imageRepository->find($imageId);
+            $vehicle->assignVehicleImage($image);
+        }
 
         return $vehicle;
     }
@@ -108,8 +122,15 @@ class VehicleService
             ->assignGearboxType($this->gearboxTypeRepository->find($vehicle->getGearboxTypeId()))
             ->assignChassisType($this->chassisTypeRepository->find($vehicle->getChassisTypeId()));
 
-        //TODO: assign images and accessories
+        foreach ($vehicle->getAccessoriesIds() as $accessoryId) {
+            $accessory = $this->accessoryRepository->find($accessoryId);
+            $vehicle->assignAccessory($accessory);
+        }
 
+        foreach ($vehicle->getImagesIds() as $imageId) {
+            $image = $this->imageRepository->find($imageId);
+            $vehicle->assignVehicleImage($image);
+        }
         return $vehicle;
     }
 }

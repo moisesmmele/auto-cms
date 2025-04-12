@@ -63,6 +63,9 @@ class PdoAccessoryRepository extends PdoRepository implements AccessoryRepositor
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         $accessory = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$accessory) {
+            throw new \Exception("Accessory not found for ID: $id");
+        }
         return new Accessory(id: $accessory['id'], label: $accessory['label'], description: $accessory['description']);
     }
 }

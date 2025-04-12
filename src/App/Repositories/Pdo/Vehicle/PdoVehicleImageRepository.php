@@ -62,6 +62,9 @@ class PdoVehicleImageRepository extends PdoRepository implements VehicleImageRep
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         $image = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$image) {
+            throw new \Exception("Image not found");
+        }
         return new VehicleImage(id: $image['id'], label: $image['label'], uri: $image['uri']);
     }
 }

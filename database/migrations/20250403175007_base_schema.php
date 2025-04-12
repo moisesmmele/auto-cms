@@ -98,7 +98,5 @@ final class BaseSchema extends AbstractMigration
             ->addForeignKey('vehicle_id', 'vehicles', 'id')
             ->addForeignKey('accessory_id', 'accessories', 'id')
             ->create();
-
-
     }
 }

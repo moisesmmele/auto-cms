@@ -6,6 +6,7 @@ use Moises\AutoCms\App\Repositories\Pdo\PdoRepository;
 use Moises\AutoCms\Core\Entities\Vehicle\Vehicle;
 use Moises\AutoCms\Core\Repositories\Vehicle\VehicleRepository;
 use PDO;
+use PDOException;
 
 class PdoVehicleRepository extends PdoRepository implements VehicleRepository
 {
@@ -56,21 +57,23 @@ class PdoVehicleRepository extends PdoRepository implements VehicleRepository
         $stmt->bindParam(':model_year', $data['model_year']);
         $stmt->bindParam(':mileage', $data['mileage']);
         $stmt->bindParam(':description', $data['description']);
-        $stmt->bindParam(':id', $data['id']);
+        $stmt->bindParam(':id', $id);
         $stmt->execute();
         return $this->find($id);
     }
 
     public function delete(int $id): bool
     {
-        $sql = "delete from vehicles where id = :id";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        if ($stmt->rowCount() > 0) {
-            return true;
+        //TODO: change method return type to array, implement try-catch with DomainException message
+        try {
+            $sql = "delete from vehicles where id = :id";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public function all(): array
@@ -138,7 +141,7 @@ class PdoVehicleRepository extends PdoRepository implements VehicleRepository
         $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $newImages = [];
         foreach ($images as $image) {
-            $newImages[] = $image['id'];
+            $newImages[] = $image['image_id'];
         }
         return $newImages;
     }
@@ -152,7 +155,7 @@ class PdoVehicleRepository extends PdoRepository implements VehicleRepository
         $accessories = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $newAccessories = [];
         foreach ($accessories as $accessory) {
-            $newAccessories[] = $accessory['id'];
+            $newAccessories[] = $accessory['accessory_id'];
         }
         return $newAccessories;
     }

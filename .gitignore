@@ -1,5 +1,5 @@
-./api-server/.env
-./api-server/vendor/
-./api-server/db.sqlite
-./api-server/.idea/
+api-server/.env
+api-server/vendor/
+api-server/db.sqlite
+api-server/.idea/
 .env

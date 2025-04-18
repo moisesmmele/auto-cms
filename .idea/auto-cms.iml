@@ -2,6 +2,7 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/api-server/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/api-server/src" isTestSource="false" packagePrefix="Moises\AutoCms\" />
       <excludeFolder url="file://$MODULE_DIR$/api-server/vendor/cakephp/chronos" />
       <excludeFolder url="file://$MODULE_DIR$/api-server/vendor/cakephp/core" />

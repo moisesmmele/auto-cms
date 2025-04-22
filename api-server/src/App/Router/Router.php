@@ -8,54 +8,120 @@ class Router
 {
     private array $routes = [];
 
-    // Register method with an additional HTTP method parameter
-    public function register(string $method, string $uri, callable|array $action): void
+    /**
+     * Register a route with method, URI pattern, action, and optional middleware.
+     */
+    public function register(string $method, string $uri, callable|array $action): self
     {
+        $paramNames = [];
+
+        // Build regex pattern and capture parameter names
+        $pattern = preg_replace_callback('#\{(\w+)\}#', function ($matches) use (&$paramNames) {
+            $paramNames[] = $matches[1];
+            return '([^/]+)';
+        }, $uri);
+        $pattern = "#^{$pattern}$#";
+
         $this->routes[] = [
-            'method' => $method,   // Store HTTP method
-            'uri' => $uri,         // Store URI
-            'action' => $action    // Store action
+            'method'     => strtoupper($method),
+            'uri'        => $uri,
+            'action'     => $action,
+            'middleware' => [],
+            'pattern'    => $pattern,
+            'paramNames' => $paramNames,
         ];
+
+        return $this;
     }
 
-    // Dispatch method to handle the request
-    public function dispatch()
+    /**
+     * Attach middleware to the most recently registered route.
+     */
+    public function middleware(string $middleware): self
     {
-        $requestUri = App::request()->getRequestUri();
+        $lastIndex = array_key_last($this->routes);
+        if ($lastIndex !== null) {
+            $this->routes[$lastIndex]['middleware'][] = $middleware;
+        }
+        return $this;
+    }
+
+    /**
+     * Load routes definitions from routes.php
+     */
+    public function loadRoutes(): void
+    {
+        require_once DIR . '/src/App/Router/routes.php';
+    }
+
+    /**
+     * Dispatch the current request to the matching route.
+     */
+    public function dispatch(): void
+    {
+        $requestUri    = App::request()->getRequestUri();
         $requestMethod = App::request()->getMethod();
 
         foreach ($this->routes as $route) {
-            $pattern = preg_replace("#\{\w+\}#", "([^/]+)", $route['uri']);
-            if (preg_match("#^$pattern$#", $requestUri, $matches)) {
-                if(isset($matches[1])) {
-                    $param = $matches[1];
-                } else { $param = null; }
-                if ($requestMethod === $route['method']) {
-                    $this->callRouteAction($route['action'], $param);
-                    return;
+            if ($route['method'] !== $requestMethod) {
+                continue;
+            }
+
+            if (preg_match($route['pattern'], $requestUri, $matches)) {
+                array_shift($matches); // remove full match
+                $params = [];
+                foreach ($route['paramNames'] as $i => $name) {
+                    $params[$name] = $matches[$i] ?? null;
                 }
+
+                $this->handleMiddleware($route, $params);
+                return;
             }
         }
-        // If no matching route found, return 404
-        header("HTTP/1.0 404 Not Found");
+
+        // No route matched: 404
+        header("HTTP/1.1 404 Not Found");
         echo "404 Not Found";
     }
 
-    public function callRouteAction($action, $param)
+    /**
+     * Execute middleware stack and finally the route action.
+     */
+    protected function handleMiddleware(array $route, array $params): void
     {
-        // If action is a closure, call it
-        if (is_callable($action)) {
-            call_user_func($action);
+        // Build initial action callable
+        $action = function () use ($route, $params) {
+            $this->executeAction($route['action'], $params);
+        };
+
+        // Wrap middleware in reverse order
+        foreach (array_reverse($route['middleware']) as $middlewareClass) {
+            $next = $action;
+            $action = function () use ($middlewareClass, $next) {
+                (new $middlewareClass())->handle($next);
+            };
         }
-        // If the action is an array (controller and method), call the controller's method
-        if (is_array($action)) {
-            list($controller, $action) = $action;
-            (new $controller)->$action($param);
-        }
+
+        // Execute the stack
+        $action();
     }
 
-    public function loadRoutes()
+    /**
+     * Call the route action (closure or controller method) with parameters.
+     */
+    protected function executeAction(callable|array $action, array $params): void
     {
-        require_once "routes.php";
+        if (is_callable($action) && !is_array($action)) {
+            call_user_func_array($action, $params);
+            return;
+        }
+
+        if (is_array($action) && count($action) === 2) {
+            [$controller, $method] = $action;
+            (new $controller())->$method(...array_values($params));
+            return;
+        }
+
+        throw new \RuntimeException('Invalid route action specified.');
     }
 }

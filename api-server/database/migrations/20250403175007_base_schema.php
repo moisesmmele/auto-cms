@@ -21,6 +21,14 @@ final class BaseSchema extends AbstractMigration
     {
         //TODO: Replace change() method with up() method and add table and column verification before applying changes
 
+        $users = $this->table('users');
+        $users->addColumn('first_name', 'string', ['length' => 255])
+            ->addColumn('last_name', 'string', ['length' => 255])
+            ->addColumn('email', 'string', ['length' => 255])
+            ->addColumn('password', 'string', ['length' => 255])
+            ->addColumn('token', 'string', ['length' => 255])
+            ->create();
+
         $makes = $this->table('makes');
         $makes->addColumn('label', 'string', ['null' => false])
             ->create();
@@ -46,8 +54,10 @@ final class BaseSchema extends AbstractMigration
             ->create();
 
         $image = $this->table('images');
-        $image->addColumn('label', 'string', ['null' => true])
-            ->addColumn('uri', 'string', ['null' => false, 'limit' => 1024])
+        $image->addColumn('name', 'string', ['null' => true])
+            ->addColumn('extension', 'string', ['null' => false, 'limit' => 32])
+            ->addColumn('width', 'integer', ['null' => false])
+            ->addColumn('height', 'integer', ['null' => false])
             ->create();
 
         $vehicle = $this->table('vehicles');

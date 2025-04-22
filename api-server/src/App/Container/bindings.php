@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Moises\AutoCms\App\Repositories\Pdo\PdoUserRepository;
 use Moises\AutoCms\App\Repositories\Pdo\Vehicle\PdoAccessoryRepository;
 use Moises\AutoCms\App\Repositories\Pdo\Vehicle\PdoChassisTypeRepository;
 use Moises\AutoCms\App\Repositories\Pdo\Vehicle\PdoColorRepository;
@@ -10,6 +11,7 @@ use Moises\AutoCms\App\Repositories\Pdo\Vehicle\PdoGearboxTypeRepository;
 use Moises\AutoCms\App\Repositories\Pdo\Vehicle\PdoVehicleImageRepository;
 use Moises\AutoCms\App\Repositories\Pdo\Vehicle\PdoMakeRepository;
 use Moises\AutoCms\App\Repositories\Pdo\Vehicle\PdoVehicleRepository;
+use Moises\AutoCms\Core\Repositories\UserRepository;
 use Moises\AutoCms\Core\Repositories\Vehicle\AccessoryRepository;
 use Moises\AutoCms\Core\Repositories\Vehicle\ChassisTypeRepository;
 use Moises\AutoCms\Core\Repositories\Vehicle\ColorRepository;
@@ -28,4 +30,5 @@ return [
     VehicleImageRepository::class => PdoVehicleImageRepository::class,
     MakeRepository::class => PdoMakeRepository::class,
     VehicleRepository::class => PdoVehicleRepository::class,
+    UserRepository::class => PdoUserRepository::class,
     ];

@@ -12,6 +12,7 @@ class App
     protected static $router;
     protected static $request;
     protected static $response;
+    protected static $storage;
 
     public static function setContainer(Container $container)
     {
@@ -37,7 +38,6 @@ class App
     {
         return static::$database;
     }
-
     public static function setRequest($request)
     {
         static::$request = $request;
@@ -46,7 +46,6 @@ class App
     {
         return static::$request;
     }
-
     public static function setResponse($response)
     {
         static::$response = $response;
@@ -54,5 +53,13 @@ class App
     public static function response()
     {
         return static::$response;
+    }
+    public static function setStorage($storage)
+    {
+        static::$storage = $storage;
+    }
+    public static function storage()
+    {
+        return static::$storage;
     }
 }

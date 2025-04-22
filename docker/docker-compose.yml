@@ -1,0 +1,35 @@
+services:
+  db:
+    image: mysql:latest
+    container-name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - './data/mysql:/var/lib/mysql'
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      - PMA_HOST: db
+      - PMA_USER: ${MYSQL_USER}
+      - PMA_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "8089:80"
+    depends_on:
+      - db
+  storage:
+      image: docker.io/bitnami/minio:2022
+  ports:
+    - '9000:9000'
+    - '9001:9001'
+  volumes:
+    - '.data/minio:/data'
+  environment:
+    - MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+    - MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    - MINIO_DEFAULT_BUCKETS: ${MINIO_DEFAULT_BUCKETS}

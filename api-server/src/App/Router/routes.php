@@ -11,6 +11,10 @@ use Moises\AutoCms\App\Controllers\Vehicle\MakeController;
 use Moises\AutoCms\App\Controllers\Vehicle\VehicleController;
 use Moises\AutoCms\App\Controllers\Vehicle\VehicleImageController;
 
+App::router()->register('GET', "/images", function () {
+
+});
+
 App::router()->register('GET', '/vehicles', [VehicleController::class, 'index']);
 App::router()->register('POST', '/vehicles', [VehicleController::class, 'store']);
 App::router()->register('GET', '/vehicles/{id}', [VehicleController::class, 'show']);

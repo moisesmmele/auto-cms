@@ -1,5 +1,5 @@
 <script>
-import router from "./router/index.js";
+import router from "../router/index.js";
 
 export default {
   name: "PrimaryOutlineButton",
@@ -9,13 +9,6 @@ export default {
     type: String,
     value: String,
   },
-  methods: {
-    onClick: function () {
-      if (this.link != null ) {
-        router.push(this.link)
-      }
-    }
-  }
 }
 </script>
 

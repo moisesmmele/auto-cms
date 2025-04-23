@@ -43,4 +43,27 @@ class UserService
         };
         return $user;
     }
+
+    public function getUserByEmail(string $email)
+    {
+        return $this->userRepository->findByEmail($email);
+    }
+    public function save(user $user)
+    {
+        $data = [
+            'id' => $user->getId(),
+            'first_name' => $user->getFirstName(),
+            'last_name' => $user->getLastName(),
+            'email' => $user->getEmail(),
+            'token' => $user->getToken(),
+            'password' => $user->getPassword(),
+        ];
+
+        $this->userRepository->update($user->id, $data);
+    }
+
+    public function findUserById($id)
+    {
+        return $this->userRepository->find($id);
+    }
 }

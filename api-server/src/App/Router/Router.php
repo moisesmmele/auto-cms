@@ -61,6 +61,7 @@ class Router
     {
         $requestUri    = App::request()->getRequestUri();
         $requestMethod = App::request()->getMethod();
+        error_log("$requestMethod........................$requestUri");
 
         foreach ($this->routes as $route) {
             if ($route['method'] !== $requestMethod) {

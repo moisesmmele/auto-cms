@@ -22,6 +22,7 @@ class ImageController extends Controller
 //            $newImages[$index]["id"] = $image["id"];
 //            $newImages[$index]["url"] = $image["url"];
 //        }
+        header('Content-type: application/json');
         echo json_encode($newImages);
     }
     public function show($url)

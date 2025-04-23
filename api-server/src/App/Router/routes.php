@@ -2,6 +2,8 @@
 
 use Moises\AutoCms\App\App;
 
+use Moises\AutoCms\App\Controllers\AuthController;
+use Moises\AutoCms\App\Controllers\Images\ImageController;
 use Moises\AutoCms\App\Controllers\Vehicle\AccessoryController;
 use Moises\AutoCms\App\Controllers\Vehicle\ChassisTypeController;
 use Moises\AutoCms\App\Controllers\Vehicle\ColorController;
@@ -10,6 +12,7 @@ use Moises\AutoCms\App\Controllers\Vehicle\GearboxTypeController;
 use Moises\AutoCms\App\Controllers\Vehicle\MakeController;
 use Moises\AutoCms\App\Controllers\Vehicle\VehicleController;
 use Moises\AutoCms\App\Controllers\Vehicle\VehicleImageController;
+use Moises\AutoCms\App\Middleware\AuthMiddleware;
 
 App::router()->register('GET', '/vehicles', [VehicleController::class, 'index']);
 App::router()->register('POST', '/vehicles', [VehicleController::class, 'store']);
@@ -65,3 +68,10 @@ App::router()->register('POST', '/vehicle-images', [VehicleImageController::clas
 App::router()->register('GET', '/vehicle-images/{id}', [VehicleImageController::class, 'show']);
 App::router()->register('DELETE', '/vehicle-images/{id}', [VehicleImageController::class, 'destroy']);
 App::router()->register('GET', '/vehicles/{vehicleId}/images', [VehicleImageController::class, 'getByVehicle']);
+
+App::router()->register('POST', '/images/upload', [ImageController::class, 'create'])->middleware(AuthMiddleware::class);
+App::router()->register('GET', '/images', [ImageController::class, 'index']);
+App::router()->register('GET', "/images/{url}", [ImageController::class, 'show']);
+
+App::router()->register('POST', "/auth/login", [AuthController::class, 'login']);
+App::router()->register('POST', "/auth/logout", [AuthController::class, 'logout']);

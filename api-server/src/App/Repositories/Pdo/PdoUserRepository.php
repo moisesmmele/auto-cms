@@ -73,4 +73,16 @@ class PdoUserRepository extends PdoRepository implements UserRepository
         $user = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $this->find($user['id']);
     }
+    public function findByEmail(string $email)
+    {
+        $sql = "SELECT * FROM `users` WHERE `email` = :email";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        $user = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if (!isset($user['id'])) {
+            return null;
+        }
+        return $this->find($user['id']);
+    }
 }

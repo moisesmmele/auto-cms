@@ -21,5 +21,7 @@ class ImageService
     {
 
     }
-    public function delete($id)
+    public function delete($id){
+        //TODO:do
+    }
 }

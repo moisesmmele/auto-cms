@@ -32,8 +32,4 @@ App::router()->loadRoutes();
 App::setRequest(Request::createFromGlobals());
 App::setResponse(new Response());
 
-App::router()->register('POST', '/images/upload', [ImageController::class, 'create'])->middleware(AuthMiddleware::class);
-App::router()->register('GET', '/images', [ImageController::class, 'index']);
-App::router()->register('GET', "/images/{url}", [ImageController::class, 'show']);
-
 App::router()->dispatch();

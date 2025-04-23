@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "notie/dist/notie.css";
 
 @theme {
     --color-primary: #AEFF02;

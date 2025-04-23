@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image Upload App</title>
+</head>
+<body>
+  <input type="file" id="imageInput" accept="image/*">
+  <button onclick="processImage()">Upload Image</button>
+
+  <script>
+    function processImage() {
+      const input = document.getElementById('imageInput');
+      const file = input.files[0];
+
+      if (!file) {
+        alert("Please select an image.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const base64String = e.target.result.split(',')[1]; // Extract base64 part only
+        const image = new Image();
+
+        image.onload = function () {
+          const width = image.width;
+          const height = image.height;
+          const extension = file.name.split('.').pop();
+          const nameWithoutExtension = file.name.replace(/\.[^/.]+$/, "");
+
+          const jsonBody = {
+            name: nameWithoutExtension,
+            extension: extension,
+            width: width,
+            height: height,
+            image: base64String
+          };
+
+          console.log("JSON Body:", JSON.stringify(jsonBody));
+
+          // Replace with your actual endpoint URL
+          fetch('http://localhost:8083/images/upload', {
+            method: 'POST',
+            headers: {Authorization: 'Bearer 89512158ede51ffbda11d644808b379a'},
+            body: JSON.stringify(jsonBody)
+          })
+          .then(response => response.json())
+          .then(data => console.log("Response:", data))
+          .catch(error => console.error("Error:", error));
+        };
+
+        image.src = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
+  </script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 <script>
 
-import Banner from "../banner.vue";
-import VehicleCard from "../VehicleCard.vue";
-import FeaturedVehicles from "../featuredVehicles.vue";
-import HomeContactForm from "../HomeContactForm.vue";
+import Banner from "./banner.vue";
+import VehicleCard from "./VehicleCard.vue";
+import FeaturedVehicles from "./featuredVehicles.vue";
+import HomeContactForm from "./HomeContactForm.vue";
 
 export default {
   data() {
@@ -64,11 +64,6 @@ export default {
     VehicleCard,
   },
   beforeMount() {
-    fetch('http://localhost:8083/listings')
-        .then((response) => (response.json()))
-        .then( (response) => {
-          this.listings = response
-        })
     fetch('http://localhost:8083/images/banner/all')
         .then((response) => (response.json()))
         .then((response) => {

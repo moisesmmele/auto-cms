@@ -1,57 +1,21 @@
 <script>
 
-import InventoryVehicleCard from "../InventoryVehicleCard.vue";
+import InventoryVehicleCard from "./InventoryVehicleCard.vue";
 export default {
   name: "InventoryPage",
   components: {InventoryVehicleCard},
   data() {
-    let vehicles = [
-      {
-        id: 1,
-        make: "Volkswagen",
-        model: "Golf Variant Highline 1.4 TSI",
-        year: 2018,
-        fuel: "Gasolina",
-        transmission: "Automático",
-        mileage: 1999999,
-        price: 1999999.99,
-        image: "http://localhost:8083/images/1516495181425.jpg"
-      },
-      {
-        id: 2,
-        make: "Volkswagen",
-        model: "Golf Variant Highline 1.4 TSI",
-        year: 2018,
-        fuel: "Gasolina",
-        transmission: "Automático",
-        mileage: 1999999,
-        price: 1999999.99,
-        image: "http://localhost:8083/images/1516495181425.jpg"
-      },
-      {
-        id: 3,
-        make: "Volkswagen",
-        model: "Golf Variant Highline 1.4 TSI",
-        year: 2018,
-        fuel: "Gasolina",
-        transmission: "Automático",
-        mileage: 1999999,
-        price: 1999999.99,
-        image: "http://localhost:8083/images/1516495181425.jpg"
-      },
-      {
-        id: 4,
-        make: "Volkswagen",
-        model: "Golf Variant Highline 1.4 TSI",
-        year: 2018,
-        fuel: "Gasolina",
-        transmission: "Automático",
-        mileage: 1999999,
-        price: 1999999.99,
-        image: "http://localhost:8083/images/1516495181425.jpg"
-      }
-    ]
-    return {vehicles}
+    return {
+      listings: Object,
+      baseUrl: "http://localhost:8083"
+    }
+  },
+  beforeMount() {
+    fetch('http://localhost:8083/listings')
+        .then((response) => (response.json()))
+        .then( (response) => {
+          this.listings = response.listings
+        })
   }
 }
 </script>
@@ -173,9 +137,10 @@ export default {
             <!-- Car Card - This will be your component -->
             <!-- COMMENT: This car card can be extracted into a separate component -->
 
-            <InventoryVehicleCard v-for="vehicle in this.vehicles"
-                                  :key="vehicle.id"
-                                  :vehicle="vehicle"/>
+            <InventoryVehicleCard v-for="listing in this.listings"
+                                  :key="listing.id"
+                                  :listing="listing"
+                                  :base-url="this.baseUrl"/>
 
             <!-- End of Car Card -->
           </div>

@@ -17,7 +17,6 @@ export default {
 </script>
 
 <template>
-  <RouterLink :to=this.link class="text-gray-100 hover:font-medium transition delay-300">{{this.value}}</RouterLink>
 </template>
 
 <style scoped>

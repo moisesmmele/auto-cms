@@ -13,7 +13,12 @@ class PdoUserRepository extends PdoRepository implements UserRepository
         $sql = 'SELECT * FROM `users`';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $users = [];
+        foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+            $user = new User($row['id'], $row['first_name'], $row['last_name'], $row['email'], $row['password'], $row['token']);
+            $users[] = $user;
+        }
+        return $users;
     }
 
     public function find(int $id): User
@@ -41,13 +46,15 @@ class PdoUserRepository extends PdoRepository implements UserRepository
 
     public function update(int $id, array $data): User
     {
-        $sql = "UPDATE `users` set first_name = :first_name, last_name = :last_name, email = :email, password = :password, token = :token";
+        $sql = "UPDATE `users` set first_name = :first_name, last_name = :last_name, email = :email, password = :password, token = :token
+                    WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':first_name', $data['first_name']);
         $stmt->bindParam(':last_name', $data['last_name']);
         $stmt->bindParam(':email', $data['email']);
         $stmt->bindParam(':password', $data['password']);
         $stmt->bindParam(':token', $data['token']);
+        $stmt->bindParam(':id', $id);
         $stmt->execute();
         return $this->find($id);
     }

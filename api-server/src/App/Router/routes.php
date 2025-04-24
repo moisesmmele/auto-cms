@@ -5,6 +5,7 @@ use Moises\AutoCms\App\App;
 use Moises\AutoCms\App\Controllers\AuthController;
 use Moises\AutoCms\App\Controllers\Images\ImageController;
 use Moises\AutoCms\App\Controllers\Listings\ListingController;
+use Moises\AutoCms\App\Controllers\User\UserController;
 use Moises\AutoCms\App\Controllers\Vehicle\AccessoryController;
 use Moises\AutoCms\App\Controllers\Vehicle\ChassisTypeController;
 use Moises\AutoCms\App\Controllers\Vehicle\ColorController;
@@ -69,6 +70,14 @@ App::router()->register('POST', '/listings', [ListingController::class, 'store']
 App::router()->register('GET', '/listings/{id}', [ListingController::class, 'show']);
 App::router()->register('PUT', '/listings/{id}', [ListingController::class, 'update'])->middleware(AuthMiddleware::class);
 App::router()->register('DELETE', '/listings/{id}', [ListingController::class, 'destroy'])->middleware(AuthMiddleware::class);
+
+// Users
+App::router()->register('GET', '/users', [UserController::class, 'index']);
+App::router()->register('POST', '/users', [UserController::class, 'store'])->middleware(AuthMiddleware::class);
+App::router()->register('GET', '/users/{id}', [UserController::class, 'show']);
+App::router()->register('PUT', '/users/{id}', [UserController::class, 'update'])->middleware(AuthMiddleware::class);
+App::router()->register('DELETE', '/users/{id}', [UserController::class, 'destroy'])->middleware(AuthMiddleware::class);
+
 
 
 App::router()->register('POST', '/images/upload', [ImageController::class, 'create'])->middleware(AuthMiddleware::class);

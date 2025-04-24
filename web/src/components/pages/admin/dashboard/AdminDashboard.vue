@@ -1,6 +1,6 @@
 <script>
-import Modal from "../Modal.vue";
-import {useUserStore} from "../../stores/useUserStore.js";
+import Modal from "../../../Modal.vue";
+import {useUserStore} from "../../../../stores/useUserStore.js";
 
 export default {
   name: "AdminDashboard",

@@ -2,10 +2,21 @@
 import VehicleCard from "./VehicleCard.vue";
 
 export default {
-  props: {
-    listings: Array
+  data() {
+    return {
+      listings: Array,
+      baseUrl: 'http://localhost:8083'
+    }
   },
+
   name: "featuredVehicles",
+  beforeMount() {
+    fetch('http://localhost:8083/listings')
+        .then((response) => (response.json()))
+        .then( (response) => {
+          this.listings = response.listings
+        })
+  },
   components: {VehicleCard}
 }
 </script>
@@ -18,11 +29,7 @@ export default {
     <!-- Vehicle Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       <!-- Assuming you have a VehicleCard component -->
-      <vehicle-card
-          v-for="listing in listings"
-          :key="listing.id"
-          :listing="listing"
-      />
+      <vehicle-card v-for="listing in listings" :key="listing.id" :listing="listing" :base-url="baseUrl"/>
     </div>
 
     <!-- Action Button -->

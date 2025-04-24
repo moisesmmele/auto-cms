@@ -6,7 +6,6 @@ class Image
 {
     private int $id;
     private string $name;
-    private string $extension;
 
     public function getId(): int
     {
@@ -37,4 +36,38 @@ class Image
     {
         $this->extension = $extension;
     }
+
+    public function getWidth(): int
+    {
+        return $this->width;
+    }
+
+    public function setWidth(int $width): void
+    {
+        $this->width = $width;
+    }
+
+    public function getHeight(): int
+    {
+        return $this->height;
+    }
+
+    public function setHeight(int $height): void
+    {
+        $this->height = $height;
+    }
+
+    public function getCategory(): string
+    {
+        return $this->category;
+    }
+
+    public function setCategory(string $category): void
+    {
+        $this->category = $category;
+    }
+    private string $extension;
+    private int $width;
+    private int $height;
+    private string $category;
 }

@@ -2,6 +2,8 @@
 
 namespace Moises\AutoCms\Core\Entities\Vehicle;
 
+use Moises\AutoCms\Core\Entities\Image\Image;
+
 class Vehicle
 {
     readonly int $id;
@@ -87,7 +89,7 @@ class Vehicle
         $this->accessories[] = $accessory;
         return $this;
     }
-    public function assignVehicleImage(VehicleImage $image): self
+    public function assignVehicleImage(Image $image): self
     {
         $this->images[] = $image;
         return $this;

@@ -14,7 +14,7 @@ class VehicleResponseDto
             'license_plate' => $vehicle->getLicensePlate(),
             'make' => $vehicle->getMake()->getLabel(),
             'model' => $vehicle->getModel(),
-            'modelYear' => $vehicle->getModelYear(),
+            'model_year' => $vehicle->getModelYear(),
             'color' => $vehicle->getColor()->getLabel(),
             'transmission' => $vehicle->getGearboxType()->getLabel(),
             'chassis' => $vehicle->getChassisType()->getLabel(),
@@ -31,10 +31,7 @@ class VehicleResponseDto
             ];
         }
         foreach ($vehicle->getImages() as $image) {
-            $response['images'][] = [
-                'label' => $image->getLabel(),
-                'uri' => $image->getUri(),
-            ];
+            $response['images'][] = ImageResponseDto::fromEntity($image);
 
         }
         return $response;

@@ -1,11 +1,10 @@
 <script>
-let vehicle;
 export default {
   name: "VehicleCard",
-  props: { vehicle },
+  props: { listing: Array },
   computed: {
     formattedPrice() {
-      const [integerPart, decimalPart] = this.vehicle.price.toString().split('.');
+      const [integerPart, decimalPart] = this.listing.price.toString().split('.');
 
       const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
@@ -23,14 +22,14 @@ export default {
     <!-- Card Header with Car Title -->
     <div class="p-4 bg-gray-50 text-center">
       <h2 class="text-2xl font-bold text-[#003366]">
-        {{vehicle.make}} {{vehicle.model}}
+        {{ listing.vehicle.make }} {{listing.vehicle.model}}
       </h2>
     </div>
 
     <!-- Car Image -->
     <div class="relative h-64 bg-gray-200">
       <img
-          :src="vehicle.image"
+          :src="listing.vehicle.images[4]"
           alt="Volkswagen Golf Variant"
           class="w-full h-full object-cover"
       />

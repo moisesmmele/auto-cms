@@ -4,24 +4,33 @@ namespace Moises\AutoCms\App\Controllers\Images;
 
 use Moises\AutoCms\App\App;
 use Moises\AutoCms\App\Controllers\Controller;
-use Moises\AutoCms\App\Dtos\ImageDto;
 use Moises\AutoCms\App\Repositories\Pdo\Image\PdoImageRepository;
+use Moises\AutoCms\App\Services\Image\ImageService;
+use Moises\AutoCms\Core\Repositories\ImageRepository;
 
 class ImageController extends Controller
 {
-    public function index()
+    protected ImageService $imageService;
+    public function __construct()
     {
-        $images = (new PdoImageRepository())->all();
+        parent::__construct();
+        $this->imageService = App::container()->get(ImageService::class);
+    }
+
+    public function index($category)
+    {
+        $images = $this->imageService->getByCategory($category);
         $newImages = [];
         foreach ($images as $index => $image) {
-            $newImages[$index]["id"] = $image["id"];
-            $newImages[$index]["url"] = "http://localhost:8083/images/".$image["name"].".".$image["extension"];
+            $newImages[$index]["id"] = $image->getId();
+            $newImages[$index]["name"] = $image->getName();
+            $newImages[$index]["extension"] = $image->getExtension();
+            $newImages[$index]["height"] = $image->getHeight();
+            $newImages[$index]["width"] = $image->getWidth();
+            $newImages[$index]["category"] = $image->getCategory();
+            $newImages[$index]["url"] = "/images/".$image->getName().".".$image->getExtension();
         }
 
-//        foreach ($images as $image => $index) {
-//            $newImages[$index]["id"] = $image["id"];
-//            $newImages[$index]["url"] = $image["url"];
-//        }
         header('Content-type: application/json');
         echo json_encode($newImages);
     }
@@ -34,20 +43,13 @@ class ImageController extends Controller
     }
     public function create()
     {
-        //receives data as associative array
         $data = json_decode($this->request->getContent(), true);
-        //saves metadata to database
-        (new PdoImageRepository())->insert(
-            name: $data['name'],
-            extension: $data['extension'],
-            width: $data['width'],
-            height: $data['height']);
-        // converts decoded image to string
-        $stream = fopen('php://temp', 'r+');
-        fwrite($stream, base64_decode($data['image']));
-        rewind($stream);
-        //saves image to filesystem
-        App::storage()->writeStream($data['name'].'.'.$data['extension'], $stream);
+        $this->imageService->upload($data);
         http_response_code(200);
+    }
+
+    public function destroy($id)
+    {
+        $this->imageService->delete($id);
     }
 }

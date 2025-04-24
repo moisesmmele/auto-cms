@@ -58,6 +58,7 @@ final class BaseSchema extends AbstractMigration
             ->addColumn('extension', 'string', ['null' => false, 'limit' => 32])
             ->addColumn('width', 'integer', ['null' => false])
             ->addColumn('height', 'integer', ['null' => false])
+            ->addColumn('category', 'string', ['null' => false])
             ->create();
 
         $vehicle = $this->table('vehicles');

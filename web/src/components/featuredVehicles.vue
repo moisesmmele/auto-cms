@@ -3,7 +3,7 @@ import VehicleCard from "./VehicleCard.vue";
 
 export default {
   props: {
-    vehicles: Array
+    listings: Array
   },
   name: "featuredVehicles",
   components: {VehicleCard}
@@ -19,9 +19,9 @@ export default {
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       <!-- Assuming you have a VehicleCard component -->
       <vehicle-card
-          v-for="vehicle in vehicles"
-          :key="vehicle.id"
-          :vehicle="vehicle"
+          v-for="listing in listings"
+          :key="listing.id"
+          :listing="listing"
       />
     </div>
 

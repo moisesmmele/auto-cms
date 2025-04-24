@@ -4,6 +4,7 @@ namespace Moises\AutoCms\App\Services\Vehicle;
 
 use Moises\AutoCms\App\App;
 use Moises\AutoCms\Core\Entities\Vehicle\Vehicle;
+use Moises\AutoCms\Core\Repositories\ImageRepository;
 use Moises\AutoCms\Core\Repositories\Vehicle\AccessoryRepository;
 use Moises\AutoCms\Core\Repositories\Vehicle\ChassisTypeRepository;
 use Moises\AutoCms\Core\Repositories\Vehicle\ColorRepository;
@@ -22,7 +23,7 @@ class VehicleService
     readonly FuelTypeRepository $fuelTypeRepository;
     readonly ChassisTypeRepository $chassisTypeRepository;
     readonly ColorRepository $colorRepository;
-    readonly VehicleImageRepository $imageRepository;
+    readonly ImageRepository $imageRepository;
     readonly AccessoryRepository $accessoryRepository;
 
     public function __construct()
@@ -33,7 +34,7 @@ class VehicleService
         $this->fuelTypeRepository = App::container()->get(FuelTypeRepository::class);
         $this->chassisTypeRepository = App::container()->get(ChassisTypeRepository::class);
         $this->colorRepository = App::container()->get(ColorRepository::class);
-        $this->imageRepository = App::container()->get(VehicleImageRepository::class);
+        $this->imageRepository = App::container()->get(ImageRepository::class);
         $this->accessoryRepository = App::container()->get(AccessoryRepository::class);
     }
 
@@ -55,7 +56,7 @@ class VehicleService
             }
 
             foreach ($vehicle->getImagesIds() as $imageId) {
-                $image = $this->imageRepository->find($imageId);
+                $image = $this->imageRepository->findById($imageId);
                 $vehicle->assignVehicleImage($image);
             }
             $newVehicles[] = $vehicle;
@@ -79,7 +80,7 @@ class VehicleService
         }
 
         foreach ($vehicle->getImagesIds() as $imageId) {
-            $image = $this->imageRepository->find($imageId);
+            $image = $this->imageRepository->findById($imageId);
             $vehicle->assignVehicleImage($image);
         }
         return $vehicle;
@@ -101,7 +102,7 @@ class VehicleService
         }
 
         foreach ($vehicle->getImagesIds() as $imageId) {
-            $image = $this->imageRepository->find($imageId);
+            $image = $this->imageRepository->findById($imageId);
             $vehicle->assignVehicleImage($image);
         }
 
@@ -128,7 +129,7 @@ class VehicleService
         }
 
         foreach ($vehicle->getImagesIds() as $imageId) {
-            $image = $this->imageRepository->find($imageId);
+            $image = $this->imageRepository->findById($imageId);
             $vehicle->assignVehicleImage($image);
         }
         return $vehicle;

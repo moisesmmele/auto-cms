@@ -53,13 +53,27 @@ export default {
         image: "http://localhost:8083/images/1516495181425.jpg"
       }
     ]
-    return { vehicles }
+    let listings
+    let bannerImages
+    return { vehicles, listings, bannerImages }
   },
   components: {
     HomeContactForm,
     FeaturedVehicles,
     Banner,
     VehicleCard,
+  },
+  beforeMount() {
+    fetch('http://localhost:8083/listings')
+        .then((response) => (response.json()))
+        .then( (response) => {
+          this.listings = response
+        })
+    fetch('http://localhost:8083/images/banner/all')
+        .then((response) => (response.json()))
+        .then((response) => {
+          this.bannerImages = response
+        })
   }
 }
 
@@ -67,14 +81,14 @@ export default {
 
 <template>
 
-  <banner class="z-0"/>
+  <banner :images="this.bannerImages" class="z-0"/>
 
   <hr>
   <div class="container flex mx-auto justify-between">
-    <featured-vehicles :vehicles />
+    <featured-vehicles :listings="this.listings" />
   </div>
 
-  <banner class="z-0"/>
+  <banner :images="this.bannerImages" class="z-0"/>
   <home-contact-form/>
 </template>
 

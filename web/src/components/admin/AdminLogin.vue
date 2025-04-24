@@ -1,5 +1,5 @@
 <script>
-import security from "../security.js";
+import security from "../../security.js";
 import router from "../../router/index.js";
 import notie from "notie/dist/notie.js";
 import {useUserStore} from "../../stores/useUserStore.js";

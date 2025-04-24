@@ -3,7 +3,7 @@
 import {RouterView} from "vue-router";
 import AppHeader from "./components/header/AppHeader.vue";
 import AppFooter from "./components/footer/AppFooter.vue";
-import security from "./components/security.js";
+import security from "./security.js";
 import {useUserStore} from "./stores/useUserStore.js";
 
 export default {

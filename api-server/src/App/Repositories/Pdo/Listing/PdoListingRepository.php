@@ -28,7 +28,7 @@ class PdoListingRepository extends PdoRepository implements ListingRepository
         $stmt->bindParam(':vehicle_id', $data['vehicle_id']);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        return $this->find($this->pdo->lastInsertId());
+        return $this->find($id);
     }
 
     public function delete(int $id): bool
@@ -45,13 +45,13 @@ class PdoListingRepository extends PdoRepository implements ListingRepository
 
     public function all(): array
     {
-        $sql = "select * from listings inner join vehicles on vehicles.id = listings.vehicle_id";
+        $sql = "select * from listings";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         $listings = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $newListings = [];
         foreach ($listings as $listing) {
-            $newListings[] = new Listing(id: $listing['id'], vehicleId: $listing['vehicle_id'], price: $listing['price']);
+            $newListings[] = $this->find($listing['id']);
         }
         return $newListings;
     }

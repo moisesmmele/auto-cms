@@ -3,7 +3,7 @@ import HeaderNavItem from "./HeaderNavItem.vue";
 import PrimaryOutlineButton from "../PrimaryOutlineButton.vue";
 import router from "../../router/index.js";
 import {useUserStore} from "../../stores/useUserStore.js";
-import security from "../security.js";
+import security from "../../security.js";
 import notie from "notie/dist/notie.js";
 
 export default {

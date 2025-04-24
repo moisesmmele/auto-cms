@@ -33,7 +33,8 @@
             extension: extension,
             width: width,
             height: height,
-            image: base64String
+            image: base64String,
+            category: "vehicle"
           };
 
           console.log("JSON Body:", JSON.stringify(jsonBody));
@@ -41,7 +42,7 @@
           // Replace with your actual endpoint URL
           fetch('http://localhost:8083/images/upload', {
             method: 'POST',
-            headers: {Authorization: 'Bearer 89512158ede51ffbda11d644808b379a'},
+            headers: {Authorization: 'Bearer 05ae0c79d56d7ad93408d29642ba9ca6'},
             body: JSON.stringify(jsonBody)
           })
           .then(response => response.json())

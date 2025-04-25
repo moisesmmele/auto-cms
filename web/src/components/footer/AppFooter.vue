@@ -71,7 +71,7 @@ export default {
       <!-- Copyright -->
       <div class="text-center text-sm">
         <p>
-          Todos os direitos reservados | 
+          Todos os direitos reservados |
           <span class="font-semibold">AutoCMS</span>
         </p>
       </div>

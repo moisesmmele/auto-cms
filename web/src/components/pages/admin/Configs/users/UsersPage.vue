@@ -1,12 +1,18 @@
 <script>
-import security from "../../../../security.js";
-import {useUserStore} from "../../../../stores/useUserStore.js";
+import security from "../../../../../security.js";
+import {useUserStore} from "../../../../../stores/useUserStore.js";
+import UsersModal from "./UsersModal.vue";
+import notie from "notie/dist/notie.js";
 
 export default {
+  components: {UsersModal},
   data() {
     return {
-      users: Array
-    }
+      users: [],
+      showModal: false,
+      selectedUser: null,
+      mode: null // or 'create'
+    };
   },
   computed: {
     userStore: function () {
@@ -17,23 +23,73 @@ export default {
     }
 
   },
-  beforeMount() {
+  methods: {
+    delete(resource, id) {
+      const headers = new Headers()
+      headers.append("Content-Type", "application/json")
+      headers.append("Authorization", "Bearer " + this.userStore.user.token)
 
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json")
-    headers.append("Authorization", "Bearer " + this.userStore.user.token)
+      const request = {
+        method: "DELETE",
+        headers: headers,
+        body: JSON.stringify({id:id})
+      }
 
-    const request = {
-      method: "GET",
-      headers: headers
+      fetch(`http://localhost:8083/${resource}/${id}`, request)
+          .then(response => response.json()
+              .then(data => ({ ok: response.ok, data })))
+          .then(({ ok, data }) => {
+            if (!ok) {
+              notie.alert({
+                type: "error",
+                text: `Não foi possível remover!`
+              })
+            } else {
+              notie.alert({
+                type: "success",
+                text: `removido(a) com sucesso!`
+              })
+              this.fetchResource()
+            }
+          })
+    },
+    openModal(mode, user = null) {
+      this.mode = mode;
+      if (mode === 'create') {
+        this.selectedUser = {
+          id:    null,
+          first_name: '',
+          last_name:  '',
+          email:      '',
+          password:   ''
+        };
+      } else {
+        this.selectedUser = user;
+      }
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
+      this.fetchResource()
+    },
+    fetchResource() {
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      headers.append("Authorization", "Bearer " + this.userStore.user.token);
+
+      fetch("http://localhost:8083/users", {
+        method: "GET",
+        headers
+      })
+          .then(res => res.json())
+          .then(data => {
+            this.users = data;
+          });
     }
-
-    fetch('http://localhost:8083/users', request)
-        .then((response) => (response.json()))
-        .then((response) => {
-          this.users = response
-        })
-  }
+  },
+  mounted() {
+    this.fetchResource();
+  },
 }
 </script>
 <template>
@@ -84,8 +140,8 @@ export default {
               </svg>
             </div>
           </div>
-          <button
-              class="bg-primary text-secondary font-medium py-2 px-4 rounded-md transition-colors"
+          <button @click="openModal('create')"
+                  class="bg-primary text-secondary font-medium py-2 px-4 rounded-md transition-makes"
           >
             Novo
           </button>
@@ -100,21 +156,23 @@ export default {
           <tr class="bg-gray-200 border-b border-b-gray-300">
             <th class="py-3 px-4 text-center font-medium text-gray-600">Código</th>
             <th class="py-3 px-4 text-center font-medium text-gray-600">Primeiro Nome</th>
-            <th class="py-3 px-4 text-center font-medium text-gray-600">Último Nome</th>
+
+            <th class="py-3 px-4 text-center font-medium text-gray-600">Segundo Nome</th>
             <th class="py-3 px-4 text-center font-medium text-gray-600">Email</th>
             <th class="py-3 px-4 text-center font-medium text-gray-600">Ações</th>
           </tr>
           </thead>
           <!-- Table body -->
           <tbody>
-          <tr v-for="user in users" :key="user.id" class="border-t bg-gray-200 border-t-gray-300 hover:bg-gray-300">
-            <td class="py-3 px-4 text-gray-700 text-center">{{ user.id }}</td>
-            <td class="py-3 px-4 text-gray-700 text-center">{{ user.first_name }}</td>
-            <td class="py-3 px-4 text-gray-700 text-center">{{ user.last_name }}</td>
-            <td class="py-3 px-4 text-gray-700 text-center">{{ user.email }}</td>
+          <tr v-for="item in users" :key="item.id" class="border-t bg-gray-200 border-t-gray-300 hover:bg-gray-300">
+            <td class="py-3 px-4 text-gray-700 text-center">{{ item.id }}</td>
+            <td class="py-3 px-4 text-gray-700 text-center">{{ item.first_name }}</td>
+            <td class="py-3 px-4 text-gray-700 text-center">{{ item.last_name }}</td>
+            <td class="py-3 px-4 text-gray-700 text-center">{{ item.email }}</td>
 
             <td class="py-3 px-4 flex justify-center space-x-3">
-              <button class="text-secondary">
+              <button @click="openModal('edit', item)"
+                      class="text-secondary">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-5 w-5"
@@ -130,7 +188,7 @@ export default {
                   />
                 </svg>
               </button>
-              <button class="text-secondary">
+              <button @click="this.delete('users', item.id)" class="text-secondary">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-5 w-5"
@@ -152,6 +210,15 @@ export default {
         </table>
       </div>
     </div>
+    <users-modal
+        v-if="showModal"
+        :user="selectedUser || null"
+        :resource="'users'"
+        :token="userStore.user.token"
+        :type="mode"
+        @close="closeModal"
+        @updated="fetchResource"
+    />
   </main>
 </template>
 

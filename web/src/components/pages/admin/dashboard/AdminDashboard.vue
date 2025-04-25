@@ -1,10 +1,8 @@
 <script>
-import Modal from "../../../Modal.vue";
 import {useUserStore} from "../../../../stores/useUserStore.js";
 
 export default {
   name: "AdminDashboard",
-  components: {Modal},
   computed: {
     userStore: function() {
       return useUserStore()

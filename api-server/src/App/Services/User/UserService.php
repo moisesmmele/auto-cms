@@ -59,7 +59,8 @@ class UserService
             'password' => $user->getPassword(),
         ];
 
-        $this->userRepository->update($user->id, $data);
+        return $this->userRepository->update($user->id, $data);
+
     }
 
     public function findUserById($id)
@@ -70,5 +71,34 @@ class UserService
     public function getAllUsers()
     {
         return $this->userRepository->all();
+    }
+
+    public function createNewUser(array $data)
+    {
+        $user = new User(
+            id: 0,
+            firstName: $data['first_name'],
+            lastName: $data['last_name'],
+            email: $data['email'],
+            password: '',
+            token: "EXPIRED_TOKEN"
+        );
+
+        $user = $this->newPassword($user, $data['password']);
+
+        $data = [
+            'first_name' => $user->getFirstName(),
+            'last_name' => $user->getLastName(),
+            'email' => $user->getEmail(),
+            'token' => $user->getToken(),
+            'password' => $user->getPassword(),
+        ];
+
+        return $this->userRepository->create($data);
+    }
+
+    public function deleteUser($id)
+    {
+        return $this->userRepository->delete($id);
     }
 }

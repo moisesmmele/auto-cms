@@ -1,11 +1,6 @@
+
 const security = {
     user: JSON.parse(localStorage.getItem('user')),
-    requireToken: function() {
-        if (user.token === null) {
-            router.push("/admin/login")
-            return false
-        }
-    },
     requestOptions: function(payload) {
         const headers = new Headers();
         headers.append("Content-Type", "application/json")

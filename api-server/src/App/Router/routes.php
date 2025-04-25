@@ -73,9 +73,9 @@ App::router()->register('PUT', '/listings/{id}', [ListingController::class, 'upd
 App::router()->register('DELETE', '/listings/{id}', [ListingController::class, 'destroy'])->middleware(AuthMiddleware::class);
 
 // Users
-App::router()->register('GET', '/users', [UserController::class, 'index']);
+App::router()->register('GET', '/users', [UserController::class, 'index'])->middleware(AuthMiddleware::class);
 App::router()->register('POST', '/users', [UserController::class, 'store'])->middleware(AuthMiddleware::class);
-App::router()->register('GET', '/users/{id}', [UserController::class, 'show']);
+App::router()->register('GET', '/users/{id}', [UserController::class, 'show'])->middleware(AuthMiddleware::class);
 App::router()->register('PUT', '/users/{id}', [UserController::class, 'update'])->middleware(AuthMiddleware::class);
 App::router()->register('DELETE', '/users/{id}', [UserController::class, 'destroy'])->middleware(AuthMiddleware::class);
 

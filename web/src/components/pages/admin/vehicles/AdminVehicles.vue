@@ -1,39 +1,93 @@
 <script>
 import security from "../../../../security.js";
 import {useUserStore} from "../../../../stores/useUserStore.js";
+import VehiclesCreateModal from "./VehiclesCreateModal.vue";
+import vehiclesEditModal from "./VehiclesEditModal.vue";
+import notie from "notie/dist/notie.js";
 
 export default {
+  components: {VehiclesCreateModal, vehiclesEditModal},
   data() {
     return {
-      vehicles: Object,
-    }
+      content: [],
+      resource: 'vehicles',
+      showCreateModal: false,
+      showEditModal: false,
+      selectedVehicle: null,
+    };
   },
   computed: {
     userStore: function () {
       return useUserStore()
     },
     results: function () {
-      return this.vehicles.length
+      return this.content.length
     }
 
   },
-  beforeMount() {
+  methods: {
+    delete(resource, id) {
+      const headers = new Headers()
+      headers.append("Content-Type", "application/json")
+      headers.append("Authorization", "Bearer " + this.userStore.user.token)
 
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json")
-    headers.append("Authorization", "Bearer " + this.userStore.user.token)
+      const request = {
+        method: "DELETE",
+        headers: headers,
+        body: JSON.stringify({id:id})
+      }
 
-    const request = {
-      method: "GET",
-      headers: headers
+      fetch(`http://localhost:8083/${resource}/${id}`, request)
+          .then(response => response.json()
+              .then(data => ({ ok: response.ok, data })))
+          .then(({ ok, data }) => {
+            if (!ok) {
+              notie.alert({
+                type: "error",
+                text: `Não foi possível remover!`
+              })
+            } else {
+              notie.alert({
+                type: "success",
+                text: `removido(a) com sucesso!`
+              })
+              this.fetchResource()
+            }
+          })
+    },
+    openCreateModal() {
+      this.showCreateModal = true;
+    },
+    openEditModal() {
+      this.showEditModal = true;
+    },
+    closeCreateModal() {
+      this.showCreateModal = false;
+      this.fetchResource(this.resource)
+      console.log('event received')
+    },
+    closeEditModal() {
+      this.showEditModal = false
+      this.fetchResource(this.resource)
+    },
+    fetchResource(resource) {
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      headers.append("Authorization", "Bearer " + this.userStore.user.token);
+
+      fetch(`http://localhost:8083/${resource}`, {
+        method: "GET",
+        headers
+      })
+          .then(res => res.json())
+          .then(data => {
+            this.content = data.vehicles;
+          });
     }
-
-    fetch('http://localhost:8083/vehicles', request)
-        .then((response) => (response.json()))
-        .then((response) => {
-          this.vehicles = response.vehicles
-        })
-  }
+  },
+  mounted() {
+    this.fetchResource(this.resource);
+  },
 }
 </script>
 <template>
@@ -84,10 +138,10 @@ export default {
               </svg>
             </div>
           </div>
-          <button
-              class="bg-primary text-secondary font-medium py-2 px-4 rounded-md transition-colors"
+          <button @click="openCreateModal()"
+                  class="bg-primary text-secondary font-medium py-2 px-4 rounded-md transition-makes"
           >
-            Novo Carro
+            Novo
           </button>
         </div>
       </div>
@@ -109,15 +163,16 @@ export default {
           </thead>
           <!-- Table body -->
           <tbody>
-          <tr v-for="vehicle in vehicles" :key="vehicle.id" class="border-t bg-gray-200 border-t-gray-300 hover:bg-gray-300">
-            <td class="py-3 px-4 text-gray-700 text-center">{{ vehicle.id }}</td>
-            <td class="py-3 px-4 text-gray-700 text-center">{{ vehicle.make }}</td>
-            <td class="py-3 px-4 text-gray-700 text-center">{{ vehicle.model }}</td>
-            <td class="py-3 px-4 text-gray-700 text-center">{{ vehicle.model_year }}</td>
-            <td class="py-3 px-4 text-gray-700 text-center">{{ vehicle.color }}</td>
-            <td class="py-3 px-4 text-gray-700 text-center">{{ vehicle.license_plate }}</td>
+          <tr v-for="item in content" :key="item.id" class="border-t bg-gray-200 border-t-gray-300 hover:bg-gray-300">
+            <td class="py-3 px-4 text-gray-700 text-center">{{ item.id }}</td>
+            <td class="py-3 px-4 text-gray-700 text-center">{{ item.make }}</td>
+            <td class="py-3 px-4 text-gray-700 text-center">{{ item.model }}</td>
+            <td class="py-3 px-4 text-gray-700 text-center">{{ item.model_year }}</td>
+            <td class="py-3 px-4 text-gray-700 text-center">{{ item.color }}</td>
+            <td class="py-3 px-4 text-gray-700 text-center">{{ item.license_plate }}</td>
             <td class="py-3 px-4 flex justify-center space-x-3">
-              <button class="text-secondary">
+              <button @click="openEditModal()"
+                      class="text-secondary">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-5 w-5"
@@ -133,7 +188,7 @@ export default {
                   />
                 </svg>
               </button>
-              <button class="text-secondary">
+              <button @click="this.delete(this.resource, item.id)" class="text-secondary">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-5 w-5"
@@ -155,6 +210,8 @@ export default {
         </table>
       </div>
     </div>
+    <vehicles-create-modal v-if="showCreateModal" resource="vehicles" :token="this.userStore.user.token" @closeCreateModal="closeCreateModal"/>
+    <vehicles-edit-modal v-if="showEditModal" resource="vehicles" user="user" token="token" @closeEditModal="closeEditModal"/>
   </main>
 </template>
 

@@ -1,12 +1,18 @@
 <script>
 import security from "../../../../security.js";
 import {useUserStore} from "../../../../stores/useUserStore.js";
+import GenericModal from "./GenericModal.vue";
+import notie from "notie/dist/notie.js";
 
 export default {
+  components: {GenericModal},
   data() {
     return {
-      makes: Array
-    }
+      makes: [],
+      showModal: false,
+      selectedMake: null,
+      mode: null // or 'create'
+    };
   },
   computed: {
     userStore: function () {
@@ -17,23 +23,64 @@ export default {
     }
 
   },
-  beforeMount() {
+  methods: {
+    delete(resource, id) {
+      const headers = new Headers()
+      headers.append("Content-Type", "application/json")
+      headers.append("Authorization", "Bearer " + this.userStore.user.token)
 
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json")
-    headers.append("Authorization", "Bearer " + this.userStore.user.token)
+      const request = {
+        method: "DELETE",
+        headers: headers,
+        body: JSON.stringify({id:id})
+      }
 
-    const request = {
-      method: "GET",
-      headers: headers
+      fetch(`http://localhost:8083/${resource}/${id}`, request)
+          .then(response => response.json()
+              .then(data => ({ ok: response.ok, data })))
+          .then(({ ok, data }) => {
+            if (!ok) {
+              notie.alert({
+                type: "error",
+                text: `Não foi possível remover!`
+              })
+            } else {
+              notie.alert({
+                type: "success",
+                text: `removido(a) com sucesso!`
+              })
+              this.fetchResource()
+            }
+          })
+    },
+    openModal(mode, make = null) {
+      this.mode = mode;
+      this.selectedMake = make;
+      this.showModal = true;
+
+    },
+    closeModal() {
+      this.showModal = false;
+      this.fetchResource()
+    },
+    fetchResource() {
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      headers.append("Authorization", "Bearer " + this.userStore.user.token);
+
+      fetch("http://localhost:8083/makes", {
+        method: "GET",
+        headers
+      })
+          .then(res => res.json())
+          .then(data => {
+            this.makes = data;
+          });
     }
-
-    fetch('http://localhost:8083/makes', request)
-        .then((response) => (response.json()))
-        .then((response) => {
-          this.makes = response
-        })
-  }
+  },
+  mounted() {
+    this.fetchResource();
+  },
 }
 </script>
 <template>
@@ -84,7 +131,7 @@ export default {
               </svg>
             </div>
           </div>
-          <button
+          <button @click="openModal('create')"
               class="bg-primary text-secondary font-medium py-2 px-4 rounded-md transition-makes"
           >
             Novo
@@ -110,7 +157,8 @@ export default {
             <td class="py-3 px-4 text-gray-700 text-center">{{ makesItem.label }}</td>
 
             <td class="py-3 px-4 flex justify-center space-x-3">
-              <button class="text-secondary">
+              <button @click="openModal('edit', makesItem)"
+                  class="text-secondary">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-5 w-5"
@@ -126,7 +174,7 @@ export default {
                   />
                 </svg>
               </button>
-              <button class="text-secondary">
+              <button @click="this.delete('makes', makesItem.id)" class="text-secondary">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-5 w-5"
@@ -148,6 +196,17 @@ export default {
         </table>
       </div>
     </div>
+    <GenericModal
+        v-if="showModal"
+        :id="selectedMake?.id"
+        :label="selectedMake?.label || ''"
+        :resource="'makes'"
+        :title="'Marca'"
+        :token="userStore.user.token"
+        :type="mode"
+        @close="closeModal"
+        @updated="fetchResource"
+    />
   </main>
 </template>
 

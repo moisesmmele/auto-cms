@@ -36,6 +36,7 @@ class MakeController extends Controller
 
     public function update($id)
     {
+        error_log('hit MakeController::update()');
         $data = json_decode(App::request()->getContent(), true);
         $result = $this->service->updateMake(data: $data, makeId: $id);
         echo json_encode($result);

@@ -16,6 +16,7 @@ use Moises\AutoCms\App\Controllers\Vehicle\VehicleController;
 use Moises\AutoCms\App\Controllers\Vehicle\VehicleImageController;
 use Moises\AutoCms\App\Middleware\AuthMiddleware;
 
+//vehicles
 App::router()->register('GET', '/vehicles', [VehicleController::class, 'index'])->middleware(AuthMiddleware::class);
 App::router()->register('POST', '/vehicles', [VehicleController::class, 'store'])->middleware(AuthMiddleware::class);
 App::router()->register('GET', '/vehicles/{id}', [VehicleController::class, 'show'])->middleware(AuthMiddleware::class);
@@ -78,12 +79,12 @@ App::router()->register('GET', '/users/{id}', [UserController::class, 'show']);
 App::router()->register('PUT', '/users/{id}', [UserController::class, 'update'])->middleware(AuthMiddleware::class);
 App::router()->register('DELETE', '/users/{id}', [UserController::class, 'destroy'])->middleware(AuthMiddleware::class);
 
-
-
+//images
 App::router()->register('POST', '/images/upload', [ImageController::class, 'create'])->middleware(AuthMiddleware::class);
 App::router()->register('GET', '/images/{category}/all', [ImageController::class, 'index']);
 App::router()->register('GET', "/images/{url}", [ImageController::class, 'show']);
-App::router()->register('DELETE', "/images/{id}", [ImageController::class, 'destroy']);
+App::router()->register('DELETE', "/images/{id}", [ImageController::class, 'destroy'])->middleware(AuthMiddleware::class);
 
+//login
 App::router()->register('POST', "/auth/login", [AuthController::class, 'login']);
 App::router()->register('POST', "/auth/logout", [AuthController::class, 'logout']);

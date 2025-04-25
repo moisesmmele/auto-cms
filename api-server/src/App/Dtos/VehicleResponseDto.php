@@ -27,7 +27,6 @@ class VehicleResponseDto
         foreach ($vehicle->getAccessories() as $accessory) {
             $response['accessories'][] = [
                 'label' => $accessory->getLabel(),
-                'description' => $accessory->getDescription(),
             ];
         }
         foreach ($vehicle->getImages() as $image) {

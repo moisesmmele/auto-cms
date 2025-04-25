@@ -6,12 +6,10 @@ class Accessory
 {
     readonly int $id;
     readonly string $label;
-    readonly string $description;
-    public function __construct(int $id, string $label, string $description)
+    public function __construct(int $id, string $label)
     {
         $this->id = $id;
         $this->label = $label;
-        $this->description = $description;
     }
     public function getLabel(): string
     {
@@ -20,9 +18,5 @@ class Accessory
     public function getId(): int
     {
         return $this->id;
-    }
-    public function getDescription(): string
-    {
-        return $this->description;
     }
 }

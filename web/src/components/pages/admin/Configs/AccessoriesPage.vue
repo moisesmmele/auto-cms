@@ -1,12 +1,18 @@
 <script>
 import security from "../../../../security.js";
 import {useUserStore} from "../../../../stores/useUserStore.js";
+import GenericModal from "./GenericModal.vue";
+import notie from "notie/dist/notie.js";
 
 export default {
+  components: {GenericModal},
   data() {
     return {
-      accessories: Array
-    }
+      accessories: [],
+      showModal: false,
+      selectedAccessory: null,
+      mode: null // or 'create'
+    };
   },
   computed: {
     userStore: function () {
@@ -17,23 +23,64 @@ export default {
     }
 
   },
-  beforeMount() {
+  methods: {
+    delete(resource, id) {
+      const headers = new Headers()
+      headers.append("Content-Type", "application/json")
+      headers.append("Authorization", "Bearer " + this.userStore.user.token)
 
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json")
-    headers.append("Authorization", "Bearer " + this.userStore.user.token)
+      const request = {
+        method: "DELETE",
+        headers: headers,
+        body: JSON.stringify({id:id})
+      }
 
-    const request = {
-      method: "GET",
-      headers: headers
+      fetch(`http://localhost:8083/${resource}/${id}`, request)
+          .then(response => response.json()
+              .then(data => ({ ok: response.ok, data })))
+          .then(({ ok, data }) => {
+            if (!ok) {
+              notie.alert({
+                type: "error",
+                text: `Não foi possível remover!`
+              })
+            } else {
+              notie.alert({
+                type: "success",
+                text: `removido(a) com sucesso!`
+              })
+              this.fetchResource()
+            }
+          })
+    },
+    openModal(mode, accessory = null) {
+      this.mode = mode;
+      this.selectedAccessory = accessory;
+      this.showModal = true;
+
+    },
+    closeModal() {
+      this.showModal = false;
+      this.fetchResource()
+    },
+    fetchResource() {
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      headers.append("Authorization", "Bearer " + this.userStore.user.token);
+
+      fetch("http://localhost:8083/accessories", {
+        method: "GET",
+        headers
+      })
+          .then(res => res.json())
+          .then(data => {
+            this.accessories = data;
+          });
     }
-
-    fetch('http://localhost:8083/accessories', request)
-        .then((response) => (response.json()))
-        .then((response) => {
-          this.accessories = response
-        })
-  }
+  },
+  mounted() {
+    this.fetchResource();
+  },
 }
 </script>
 <template>
@@ -84,8 +131,8 @@ export default {
               </svg>
             </div>
           </div>
-          <button
-              class="bg-primary text-secondary font-medium py-2 px-4 rounded-md transition-colors"
+          <button @click="openModal('create')"
+                  class="bg-primary text-secondary font-medium py-2 px-4 rounded-md transition-makes"
           >
             Novo
           </button>
@@ -105,12 +152,13 @@ export default {
           </thead>
           <!-- Table body -->
           <tbody>
-          <tr v-for="accessory in accessories" :key="accessory.id" class="border-t bg-gray-200 border-t-gray-300 hover:bg-gray-300">
-            <td class="py-3 px-4 text-gray-700 text-center">{{ accessory.id }}</td>
-            <td class="py-3 px-4 text-gray-700 text-center">{{ accessory.label }}</td>
+          <tr v-for="item in accessories" :key="item.id" class="border-t bg-gray-200 border-t-gray-300 hover:bg-gray-300">
+            <td class="py-3 px-4 text-gray-700 text-center">{{ item.id }}</td>
+            <td class="py-3 px-4 text-gray-700 text-center">{{ item.label }}</td>
 
             <td class="py-3 px-4 flex justify-center space-x-3">
-              <button class="text-secondary">
+              <button @click="openModal('edit', item)"
+                      class="text-secondary">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-5 w-5"
@@ -126,7 +174,7 @@ export default {
                   />
                 </svg>
               </button>
-              <button class="text-secondary">
+              <button @click="this.delete('accessories', item.id)" class="text-secondary">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-5 w-5"
@@ -148,6 +196,17 @@ export default {
         </table>
       </div>
     </div>
+    <GenericModal
+        v-if="showModal"
+        :id="selectedAccessory?.id"
+        :label="selectedAccessory?.label || ''"
+        :resource="'accessories'"
+        :title="'Acessórios'"
+        :token="userStore.user.token"
+        :type="mode"
+        @close="closeModal"
+        @updated="fetchResource"
+    />
   </main>
 </template>
 

@@ -14,7 +14,7 @@ export default {
 </script>
 <template>
   <div class="flex mx-auto">
-    <main class="bg-white p-8 flex flex-col justify-center">
+    <main class="p-8 flex flex-col justify-center">
       <!-- Welcome message -->
       <div class="mb-12">
         <h1 class="text-secondary text-2xl font-medium">

@@ -32,4 +32,6 @@ App::router()->loadRoutes();
 App::setRequest(Request::createFromGlobals());
 App::setResponse(new Response());
 
+error_log(App::request()->getContent());
+
 App::router()->dispatch();

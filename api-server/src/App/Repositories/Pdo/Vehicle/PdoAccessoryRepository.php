@@ -12,21 +12,19 @@ class PdoAccessoryRepository extends PdoRepository implements AccessoryRepositor
 
     public function create(array $data): Accessory
     {
-        $sql = "insert into accessories (label, description) values (:label, :description)";
+        $sql = "insert into accessories (label) values (:label)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':label', $data['label']);
-        $stmt->bindParam(':description', $data['description']);
         $stmt->execute();
         return $this->find($this->pdo->lastInsertId());
     }
 
     public function update(int $id, array $data): Accessory
     {
-        $sql = "update accessories set label = :label, description = :description where id = :id";
+        $sql = "update accessories set label = :label where id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':label', $data['label']);
-        $stmt->bindParam(':description', $data['description']);
         $stmt->execute();
         return $this->find($id);
     }
@@ -51,7 +49,7 @@ class PdoAccessoryRepository extends PdoRepository implements AccessoryRepositor
         $accessories = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $newAccessories = [];
         foreach ($accessories as $accessory) {
-            $newAccessories[] = new Accessory(id: $accessory['id'], label: $accessory['label'], description: $accessory['description']);
+            $newAccessories[] = new Accessory(id: $accessory['id'], label: $accessory['label']);
         }
         return $newAccessories;
     }
@@ -66,6 +64,6 @@ class PdoAccessoryRepository extends PdoRepository implements AccessoryRepositor
         if (!$accessory) {
             throw new \Exception("Accessory not found for ID: $id");
         }
-        return new Accessory(id: $accessory['id'], label: $accessory['label'], description: $accessory['description']);
+        return new Accessory(id: $accessory['id'], label: $accessory['label']);
     }
 }

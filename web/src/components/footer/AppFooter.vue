@@ -71,8 +71,8 @@ export default {
       <!-- Copyright -->
       <div class="text-center text-sm">
         <p>
-          Todos os direitos reservados | Transforma Auto | Desenvolvido por
-          <span class="font-semibold">Transforma Digital</span>
+          Todos os direitos reservados | 
+          <span class="font-semibold">AutoCMS</span>
         </p>
       </div>
     </div>

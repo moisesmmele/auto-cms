@@ -14,6 +14,7 @@ import AccessoriesPage from "../components/pages/admin/Configs/AccessoriesPage.v
 import chassisPage from "../components/pages/admin/Configs/ChassisPage.vue";
 import MakesPage from "../components/pages/admin/Configs/MakesPage.vue";
 import FuelsPage from "../components/pages/admin/Configs/FuelsPage.vue";
+import adminLeads from "../components/pages/admin/leads/AdminLeads.vue";
 
 const routes = [
 
@@ -26,6 +27,7 @@ const routes = [
     { path: "/admin/dashboard", name: "AdminDashboard", component: adminDashboard },
     { path: "/admin/anuncios", name: "AdminListings", component: AdminListings },
     { path: "/admin/veiculos", name: "AdminVehicles", component: adminVehicles },
+    { path: "/admin/leads", name: "AdminLeads", component: adminLeads },
     { path: "/admin/config/usuarios", name: "UsersPage", component: UsersPage },
     { path: "/admin/config/transmissoes", name: "GearboxesPage", component: GearboxesPage },
     { path: "/admin/config/cores", name: "ColorsPage", component: ColorsPage },

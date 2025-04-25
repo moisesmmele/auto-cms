@@ -14,7 +14,7 @@ export default {
     fetch('http://localhost:8083/listings')
         .then((response) => (response.json()))
         .then( (response) => {
-          this.listings = response.listings
+          this.listings = response.listings.slice(0, 4);
         })
   },
   components: {VehicleCard}

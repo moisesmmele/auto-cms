@@ -20,6 +20,7 @@
         "robmorgan/phinx": "0.x-dev",
         "symfony/http-foundation": "7.3.x-dev",
         "symfony/var-dumper": "7.3.x-dev",
-        "league/flysystem": "^3.0"
+        "league/flysystem": "^3.0",
+        "symfony/mime": "7.3.x-dev"
     }
 }

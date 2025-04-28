@@ -81,7 +81,10 @@ App::router()->register('DELETE', '/users/{id}', [UserController::class, 'destro
 
 //images
 App::router()->register('POST', '/images/upload', [ImageController::class, 'create'])->middleware(AuthMiddleware::class);
+App::router()->register('POST', '/images/uploadTest', [ImageController::class, 'createTest']);
+
 App::router()->register('GET', '/images/{category}/all', [ImageController::class, 'index']);
+
 App::router()->register('GET', "/images/{url}", [ImageController::class, 'show']);
 App::router()->register('DELETE', "/images/{id}", [ImageController::class, 'destroy'])->middleware(AuthMiddleware::class);
 

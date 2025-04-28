@@ -52,4 +52,17 @@ class ImageController extends Controller
     {
         $this->imageService->delete($id);
     }
+
+    public function createTest()
+    {
+        $filesArray = $this->request->files;
+        foreach ($filesArray as $item) {
+            $filepath = $item->getRealPath();
+            $name = uniqid();
+            $extension = $item->guessExtension();
+            error_log($name.'.'.$extension);
+            $file = file_get_contents($filepath);
+            $this->imageService->uploadFromFile($file, $name, $extension);
+        }
+    }
 }

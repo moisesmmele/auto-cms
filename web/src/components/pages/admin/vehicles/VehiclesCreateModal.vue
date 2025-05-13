@@ -1,8 +1,11 @@
 <script>
 import notie from "notie/dist/notie.js";
+import AccessoryComponent from "./AccessoryComponent.vue";
+import PhotosComponent from "./PhotosComponent.vue";
 
 export default {
   name: "VehiclesCreateModal",
+  components: {AccessoryComponent, PhotosComponent},
   props: {
     token: { type: String, required: true },
     resource: { type: String, required: true },
@@ -20,20 +23,24 @@ export default {
       selectedColorId: null,
       selectedGearboxId: null,
       selectedFuelId: null,
-      SelectedImagesId: [18],
-      selectedAccessoriesId: [1, 2, 3, 4, 5],
-      encodedImages: [],
+      imagesIds: [],
+      selectedAccessoriesId: null,
 
       availableMakes: [],
       availableTransmissions: [],
       availableColors: [],
       availableChassis: [],
       availableFuels: [],
-      availableAccessories: [{ id:1, label: 'Teto Solar' }, { id:2, label: 'Vidro Elétrico' }, { id:3, label: 'Multimídia' }]
+      availableAccessories: [],
+
+      images: [],
+      selectedAccessories: [],
     }
   },
   methods: {
     save() {
+      this.uploadImages()
+
       const headers = new Headers()
       headers.append("Content-Type", "application/json")
       headers.append("Authorization", "Bearer " + this.token)
@@ -55,7 +62,7 @@ export default {
         mileage: this.mileage,
         description: this.description,
         accessories: this.selectedAccessoriesId,
-        images: this.SelectedImagesId
+        images: this.imagesIds,
       }
 
       const request = {
@@ -80,6 +87,30 @@ export default {
               })
               this.toggle()
             }
+          })
+    },
+    uploadImages() {
+      const headers = new Headers()
+      headers.append("Content-Type", "multipart/form-data; " + 'boundary=' + Math.random().toString().substr(2))
+      headers.append("Authorization", "Bearer " + this.token)
+      const formData = new FormData()
+
+      Array.from(this.images).forEach(file => {
+        formData.append('images', file);
+      });
+
+      const request = {
+        method: 'POST',
+        headers: headers,
+        body: formData
+      }
+
+      fetch("http://localhost:8083/images/uploadTest", request)
+          .then(res => res.json())
+          .then(data => {
+            data.forEach(item => {
+              this.imagesIds.push(item.id)
+            })
           })
     },
     toggle() {
@@ -110,7 +141,13 @@ export default {
       fetch("http://localhost:8083/fuels")
           .then((res) => (res.json()))
           .then((data) => {this.availableFuels = data})
-    }
+    },
+    fetchAccessories(){
+      fetch("http://localhost:8083/accessories")
+          .then((res) => (res.json()))
+          .then((data) => {this.availableAccessories = data})
+    },
+
   },
   mounted() {
     this.fetchMakes()
@@ -118,6 +155,7 @@ export default {
     this.fetchGearboxes()
     this.fetchChassis()
     this.fetchColors()
+    this.fetchAccessories()
   }
 }
 </script>
@@ -260,74 +298,10 @@ export default {
           </div>
 
           <!-- Highlights and Options Section -->
-          <h2 class="text-xl text-gray-500 font-medium mt-8 mb-4">Destaques e opcionais</h2>
-
-          <div class="relative">
-            <div class="flex items-center border rounded bg-white px-3 py-2">
-              <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-              </svg>
-              <div class="flex flex-wrap gap-2 flex-1">
-                <div v-for="accessory in availableAccessories" :key="accessory.id"
-                     class="flex items-center bg-gray-800 text-white text-sm px-2 py-1 rounded">
-                  {{ accessory.label }}
-                  <button @click="null" class="ml-1 text-white hover:text-gray-300">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                  </button>
-                </div>
-                <input type="text" placeholder="Buscar opcionais..."
-                       class="flex-1 min-w-[150px] outline-none"
-                       @keydown.enter="null" />
-              </div>
-            </div>
-          </div>
+          <AccessoryComponent :available-accessories="availableAccessories" v-model:selectedAccessories="selectedAccessories"/>
 
           <!-- Photos Section -->
-          <div class="mt-8">
-            <div class="flex justify-between items-center mb-4">
-              <h2 class="text-xl text-gray-500 font-medium">Fotos</h2>
-              <button class="bg-lime-400 hover:bg-lime-500 text-black font-medium px-4 py-1 rounded">
-                Inserir
-              </button>
-            </div>
-
-            <div class="relative">
-              <div class="flex overflow-x-auto gap-2 pb-2">
-                <div v-for="(photo, index) in this.SelectedImagesId" :key="index" class="relative min-w-[150px] h-[100px] flex-shrink-0">
-                  <img src="https://placehold.co/600x400/png" :alt="`Vehicle photo ${index + 1}`" class="w-full h-full object-cover" />
-
-                  <!-- Controls overlay for the second image -->
-                  <div v-if="index === 1" class="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center gap-2">
-                    <button class="bg-lime-400 hover:bg-lime-500 w-8 h-8 rounded-full flex items-center justify-center">
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                      </svg>
-                    </button>
-                    <button class="bg-lime-400 hover:bg-lime-500 w-8 h-8 rounded-full flex items-center justify-center">
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Navigation arrows -->
-              <button class="absolute left-0 top-1/2 -translate-y-1/2 -ml-4 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-              </button>
-              <button class="absolute right-0 top-1/2 -translate-y-1/2 -mr-4 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-              </button>
-            </div>
-          </div>
+          <PhotosComponent v-model="images"/>
         </div>
       </div>
     </div>

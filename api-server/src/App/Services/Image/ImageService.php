@@ -38,8 +38,9 @@ class ImageService
             'height' => 0,
             ];
 
-        $this->repository->create($data);
+        $image = $this->repository->create($data);
         App::storage()->write($name.'.'.$extension, $file);
+        return $image;
     }
     public function getByCategory($category)
     {

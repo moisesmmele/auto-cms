@@ -34,9 +34,9 @@ export default {
 
     <!-- Action Button -->
     <div class="flex justify-center">
-      <button class="w-full max-w-xl py-3 px-6 bg-[#d6e600] hover:bg-[#c5d500] text-[#004080] font-bold text-xl rounded-md transition-colors duration-200">
+      <router-link to="/estoque" class="text-center w-full max-w-xl py-3 px-6 bg-[#d6e600] hover:bg-[#c5d500] text-[#004080] font-bold text-xl rounded-md transition-colors duration-200">
         Conferir estoque
-      </button>
+      </router-link>
     </div>
   </section>
 </template>

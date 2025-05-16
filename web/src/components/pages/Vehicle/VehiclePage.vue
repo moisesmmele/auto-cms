@@ -58,7 +58,7 @@ export default {
           <div class="relative bg-gray-200">
             <div class="w-full h-[400px] relative">
               <img
-                  :src="imageArray[4]"
+                  :src="imageArray[0]"
                   alt="Volkswagen Golf Variant Highline"
                   class="w-full h-full object-contain"
               />

@@ -1,11 +1,15 @@
 <script>
 import security from "../../../../security.js";
 import {useUserStore} from "../../../../stores/useUserStore.js";
+import ListingsCreateModal from "./ListingsCreateModal.vue";
 
 export default {
+  components: {ListingsCreateModal},
   data() {
     return {
       listings: Object,
+      showCreateModal: false,
+      showUpdateModal: false,
     }
   },
   computed: {
@@ -38,6 +42,12 @@ export default {
       let [integerPart, decimalPart] = number.toFixed(2).split(".");
       integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
       return `${integerPart},${decimalPart}`;
+    },
+    openCreateModal() {
+      this.showCreateModal = true;
+    },
+    closeCreateModal() {
+      this.showCreateModal = false;
     }
   }
 }
@@ -90,7 +100,7 @@ export default {
               </svg>
             </div>
           </div>
-          <button
+          <button @click="openCreateModal"
               class="bg-primary text-secondary font-medium py-2 px-4 rounded-md transition-colors"
           >
             Novo Anúncio
@@ -161,6 +171,7 @@ export default {
         </table>
       </div>
     </div>
+    <listings-create-modal v-if="this.showCreateModal" resource="listings" :token="this.userStore.user.token" @closeCreateModal="closeCreateModal"/>
   </main>
 </template>
 

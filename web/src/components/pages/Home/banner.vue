@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     startSlide() {
-      this.timer = setInterval(this.next, 4000);
+      this.timer = setInterval(this.next, 10000);
     },
     next() {
       this.currentIndex = (this.currentIndex + 1) % this.images.length;
@@ -53,7 +53,6 @@ export default {
         <img
             v-if="currentImg"
             :src="currentImg.url"
-            :style="{ height: currentImg.height + 'px' }"
             class="w-full object-cover transition-opacity duration-1000 ease-in-out"
         />
       </div>

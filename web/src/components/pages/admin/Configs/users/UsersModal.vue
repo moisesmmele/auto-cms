@@ -10,8 +10,19 @@ export default {
     type: { type: String, default: 'edit' },
   },
   data() {
+    let localUser = this.user
+    if (!localUser.password) {
+      localUser.password = ''
+    }
+
     return {
-      localUser: this.user
+      localUser,
+      passwordConfirm: ''
+    }
+  },
+  computed: {
+    checkPassword() {
+      return this.localUser.password !== this.passwordConfirm;
     }
   },
   watch: {
@@ -147,11 +158,18 @@ export default {
           <div class="flex flex-wrap gap-x-6 items-center">
             <div class="flex items-center flex-grow">
               <span class="text-gray-600 mr-6 w-32">Senha:</span>
-              <input type="text" v-model="localUser.password"
+              <input type="password" v-model="localUser.password" autocomplete="false"
                      class="flex-grow max-w-md w-full border border-gray-300 rounded px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500" />
             </div>
           </div>
-
+          <div class="flex flex-wrap gap-x-6 items-center">
+            <div class="flex items-center flex-grow">
+              <span class="text-gray-600 mr-6 w-32">Confirme sua senha:</span>
+              <input type="password" v-model="passwordConfirm" autocomplete="false"
+                     class="flex-grow max-w-md w-full border border-gray-300 rounded px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500" />
+            </div>
+          </div>
+          <p v-if="checkPassword" class="text-center text-red-600 text-xs">As senhas digitadas não são iguais!</p>
         </div>
       </div>
     </div>
@@ -217,11 +235,18 @@ export default {
           <div class="flex flex-wrap gap-x-6 items-center">
             <div class="flex items-center flex-grow">
               <span class="text-gray-600 mr-6 w-32">Senha:</span>
-              <input type="text" v-model="localUser.password"
+              <input type="text" v-model="localUser.password" autocomplete="false"
                      class="flex-grow max-w-md w-full border border-gray-300 rounded px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500" />
             </div>
           </div>
-
+          <div class="flex flex-wrap gap-x-6 items-center">
+            <div class="flex items-center flex-grow">
+              <span class="text-gray-600 mr-6 w-32">Confirme sua senha:</span>
+              <input type="password" v-model="passwordConfirm" autocomplete="false"
+                     class="flex-grow max-w-md w-full border border-gray-300 rounded px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500" />
+            </div>
+          </div>
+          <p v-if="checkPassword" class="text-center text-red-600 text-xs">As senhas digitadas não são iguais!</p>
         </div>
       </div>
     </div>

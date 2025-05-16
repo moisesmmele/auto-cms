@@ -7,55 +7,11 @@ import HomeContactForm from "./HomeContactForm.vue";
 
 export default {
   data() {
-    let vehicles = [
-      {
-        id: 1,
-        make: "Volkswagen",
-        model: "Golf Variant Highline 1.4 TSI",
-        year: 2018,
-        fuel: "Gasolina",
-        transmission: "Automático",
-        mileage: 1999999,
-        price: 1999999.99,
-        image: "http://localhost:8083/images/1516495181425.jpg"
-      },
-      {
-        id: 2,
-        make: "Volkswagen",
-        model: "Golf Variant Highline 1.4 TSI",
-        year: 2018,
-        fuel: "Gasolina",
-        transmission: "Automático",
-        mileage: 1999999,
-        price: 1999999.99,
-        image: "http://localhost:8083/images/1516495181425.jpg"
-      },
-      {
-        id: 3,
-        make: "Volkswagen",
-        model: "Golf Variant Highline 1.4 TSI",
-        year: 2018,
-        fuel: "Gasolina",
-        transmission: "Automático",
-        mileage: 1999999,
-        price: 1999999.99,
-        image: "http://localhost:8083/images/1516495181425.jpg"
-      },
-      {
-        id: 4,
-        make: "Volkswagen",
-        model: "Golf Variant Highline 1.4 TSI",
-        year: 2018,
-        fuel: "Gasolina",
-        transmission: "Automático",
-        mileage: 1999999,
-        price: 1999999.99,
-        image: "http://localhost:8083/images/1516495181425.jpg"
-      }
-    ]
-    let listings
-    let bannerImages
-    return { vehicles, listings, bannerImages }
+    return {
+      vehicles: [],
+      listings: [],
+      bannerImages: [],
+    }
   },
   components: {
     HomeContactForm,
@@ -64,7 +20,7 @@ export default {
     VehicleCard,
   },
   beforeMount() {
-    fetch('http://localhost:8083/images/banner/all')
+    fetch('http://localhost:8083/banners')
         .then((response) => (response.json()))
         .then((response) => {
           this.bannerImages = response

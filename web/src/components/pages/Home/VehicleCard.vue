@@ -35,7 +35,7 @@ export default {
     <div class="relative h-64 bg-gray-200">
       <router-link :to="`/estoque/${listing.id}`">
         <img
-            :src="imageArray[4]"
+            :src="imageArray[0]"
             alt="Volkswagen Golf Variant"
             class="w-full h-full object-cover"
         />

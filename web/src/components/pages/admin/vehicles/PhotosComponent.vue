@@ -12,26 +12,30 @@ export default {
       this.$refs.fileInput.click()
     },
     handleFileChange() {
+      // Retrieve selected files
       const files = Array.from(this.$refs.fileInput.files);
 
-      // Add new files to the images array
-      this.photos.push(...files);
+      // Add each file to the photos array
+      files.forEach(file => {
+        this.photos.push(file);
+      });
 
-      // Preview the uploaded images
-      files.forEach(photo => {
+      // Log photos array to ensure multiple files are added
+      console.log(this.photos);
+
+      // Read each file for preview purposes
+      files.forEach(file => {
         const reader = new FileReader();
         reader.onload = e => {
           this.previews.push(e.target.result);
         };
-        reader.readAsDataURL(photo);
+        reader.readAsDataURL(file);
       });
+
+      // Clear the input value after processing to allow re-selection of same files
+      this.$refs.fileInput.value = null;
       this.$emit("update:modelValue", this.photos);
     },
-    removeImage(index) {
-      this.photos.splice(index, 1)
-      this.previews.splice(index, 1)
-      this.$emit("update:modelValue", this.photos)
-    }
   }
 }
 </script>

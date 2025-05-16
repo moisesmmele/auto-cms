@@ -24,7 +24,7 @@ export default {
       selectedGearboxId: null,
       selectedFuelId: null,
       imagesIds: [],
-      selectedAccessoriesId: null,
+      selectedAccessoriesId: [],
 
       availableMakes: [],
       availableTransmissions: [],
@@ -33,13 +33,13 @@ export default {
       availableFuels: [],
       availableAccessories: [],
 
-      images: [],
+      photos: [],
       selectedAccessories: [],
     }
   },
   methods: {
-    save() {
-      this.uploadImages()
+    async save() {
+      await this.uploadImages()
 
       const headers = new Headers()
       headers.append("Content-Type", "application/json")
@@ -89,14 +89,14 @@ export default {
             }
           })
     },
-    uploadImages() {
+    async uploadImages() {
+      console.log("Init method")
       const headers = new Headers()
-      headers.append("Content-Type", "multipart/form-data; " + 'boundary=' + Math.random().toString().substr(2))
       headers.append("Authorization", "Bearer " + this.token)
       const formData = new FormData()
 
-      Array.from(this.images).forEach(file => {
-        formData.append('images', file);
+      Array.from(this.photos).forEach(file => {
+        formData.append(`${file.name}`, file);
       });
 
       const request = {
@@ -105,7 +105,9 @@ export default {
         body: formData
       }
 
-      fetch("http://localhost:8083/images/uploadTest", request)
+      console.log("init fetch")
+      console.log("FormData: ", formData)
+      return fetch("http://localhost:8083/images/uploadTest", request)
           .then(res => res.json())
           .then(data => {
             data.forEach(item => {
@@ -301,7 +303,7 @@ export default {
           <AccessoryComponent :available-accessories="availableAccessories" v-model:selectedAccessories="selectedAccessories"/>
 
           <!-- Photos Section -->
-          <PhotosComponent v-model="images"/>
+          <PhotosComponent v-model="photos"/>
         </div>
       </div>
     </div>

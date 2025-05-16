@@ -28,7 +28,7 @@ export default {
     <div class="relative">
       <router-link :to="`/estoque/${listing.id}`">
         <img
-            :src="imageArray[4]"
+            :src="imageArray[0]"
             alt="Volkswagen Golf TSI Variant Highline"
             class="w-full h-48 object-cover"
         />

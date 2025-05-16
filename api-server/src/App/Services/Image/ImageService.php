@@ -28,12 +28,12 @@ class ImageService
         return $img;
     }
 
-    public function uploadFromFile($file, $name, $extension)
+    public function uploadFromFile($file, $name, $extension, $category)
     {
         $data = [
             'name' => $name,
             'extension' => $extension,
-            'category' => 'NULL',
+            'category' => $category,
             'width' => 0,
             'height' => 0,
             ];

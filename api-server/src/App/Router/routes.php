@@ -3,6 +3,7 @@
 use Moises\AutoCms\App\App;
 
 use Moises\AutoCms\App\Controllers\AuthController;
+use Moises\AutoCms\App\Controllers\Banners\BannerController;
 use Moises\AutoCms\App\Controllers\Images\ImageController;
 use Moises\AutoCms\App\Controllers\Listings\ListingController;
 use Moises\AutoCms\App\Controllers\User\UserController;
@@ -82,6 +83,9 @@ App::router()->register('DELETE', '/users/{id}', [UserController::class, 'destro
 //images
 App::router()->register('POST', '/images/upload', [ImageController::class, 'create'])->middleware(AuthMiddleware::class);
 App::router()->register('POST', '/images/uploadTest', [ImageController::class, 'createTest']);
+
+App::router()->register('GET', '/banners', [BannerController::class, 'index']);
+App::router()->register('POST', '/banners', [BannerController::class, 'store'])->middleware(AuthMiddleware::class);
 
 App::router()->register('GET', '/images/{category}/all', [ImageController::class, 'index']);
 

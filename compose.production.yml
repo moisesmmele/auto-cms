@@ -1,0 +1,38 @@
+services:
+  api:
+    image: ${API_IMAGE}
+    container_name: auto-api
+    networks:
+      - auto-cms_internal
+    env_file: api-server/.env
+    environment:
+      - APP_ENV=PRODUCTION
+
+  web:
+    image: ${WEB_IMAGE}
+    container_name: auto-web
+    ports:
+      - "${APP_PORT}:80"
+    networks:
+      - auto-cms_external
+      - auto-cms_internal
+    env_file: web/.env
+
+  database:
+    image: mysql
+    container_name: auto-database
+    volumes:
+      - auto-database_data
+    networks:
+      - auto-cms_internal
+
+networks:
+  auto-cms_external:
+    driver: bridge
+    internal: false
+    attachable: true
+
+  auto-cms_internal:
+    driver: bridge
+    internal: true
+    attachable: false

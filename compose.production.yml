@@ -35,6 +35,10 @@ services:
       - internal
 
 networks:
+  bridge:
+    driver: bridge
+    external: true
+    attachable: true
   internal:
     driver: bridge
     internal: true

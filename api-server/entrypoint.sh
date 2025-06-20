@@ -5,6 +5,7 @@ echo "Starting entrypoint..."
 
 # 2. Run Phinx migrations
 echo "Running database migrations with Phinx..."
+sleep 10
 ./vendor/bin/phinx migrate -e production
 
 # 3. Create default admin user

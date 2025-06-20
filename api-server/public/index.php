@@ -19,8 +19,11 @@ require_once DIR . '/vendor/autoload.php';
 require_once DIR . 'cors.php';
 
 
-Dotenv::createImmutable(dirname(__DIR__), '.env')->load();
-
+if (isset($_ENV['APP_ENV'])) {
+    if ($_ENV['APP_ENV'] === 'development') {
+        Dotenv::createImmutable(dirname(__DIR__), '.env')->load();
+    }
+}
 
 App::setContainer(new Container());
 App::container()->loadBindings();

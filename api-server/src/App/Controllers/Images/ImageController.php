@@ -11,12 +11,12 @@ use Moises\AutoCms\Core\Repositories\ImageRepository;
 class ImageController extends Controller
 {
     protected ImageService $imageService;
-    protected ImageRepository $imageRepository;
+    protected ImageRepository $repository;
     public function __construct()
     {
         parent::__construct();
         $this->imageService = App::container()->get(ImageService::class);
-        $this->imageRepository = App::container()->get(ImageRepository::class);
+        $this->repository = App::container()->get(ImageRepository::class);
     }
 
     public function index($category)

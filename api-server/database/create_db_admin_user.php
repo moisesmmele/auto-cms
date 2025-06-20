@@ -4,8 +4,11 @@ use Dotenv\Dotenv;
 
 require_once "../vendor/autoload.php";
 
-Dotenv::createImmutable("../.")->load();
-
+if (isset($_ENV['APP_ENV'])) {
+    if ($_ENV['APP_ENV'] === 'development') {
+        Dotenv::createImmutable(__DIR__)->load();
+    }
+}
 $db_username = $_ENV['DB_USER'];
 $db_password = $_ENV['DB_PASSWORD'];
 $db_name = $_ENV['DB_NAME'];

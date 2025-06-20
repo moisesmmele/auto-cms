@@ -38,8 +38,14 @@ class ImageController extends Controller
     }
     public function show($url)
     {
-        header('Content-type: image/jpeg');
         $image = App::storage()->read($url);
+
+        // Debug logging
+        error_log("Image URL: " . $url);
+        error_log("Image data length: " . strlen($image));
+        error_log("First 20 bytes: " . bin2hex(substr($image, 0, 20)));
+
+        header('Content-type: image/jpeg');
         echo $image;
 
     }

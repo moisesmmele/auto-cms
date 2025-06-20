@@ -9,7 +9,10 @@ echo "Running database migrations with Phinx..."
 
 # 3. Create default admin user
 echo "Creating default admin user..."
-php database/create_db_admin_user.php
+
+cd database
+php create_db_admin_user.php
+cd ..
 
 # 4. Start supervisord
 echo "Starting supervisord..."

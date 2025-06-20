@@ -4,8 +4,8 @@ set -e
 
 # Configuration
 REGISTRY="registry.mele.lat"
-API_IMAGE_NAME="shortener-api"
-WEB_IMAGE_NAME="shortener-web"
+API_IMAGE_NAME="auto-api"
+WEB_IMAGE_NAME="auto-web"
 COMPOSE_FILE="compose.production.yml"
 ENV_FILE=".env"
 

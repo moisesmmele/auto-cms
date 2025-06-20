@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     nginx \
     supervisor \
+    netcat-traditional \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
@@ -51,6 +52,12 @@ COPY nginx.default.conf /etc/nginx/sites-available/default
 # Copy supervisord config
 COPY supervisord.default.conf /etc/supervisor/conf.d/supervisord.conf
 
+# Copy entrypoint script
+COPY entrypoint.sh .
+
+# Set entrypoint executable permission
+RUN chmod +x ./entrypoint.sh
+
 # Configure PHP-FPM to listen on TCP
 RUN sed -i 's/listen = \/run\/php\/php8.4-fpm.sock/listen = 127.0.0.1:9000/' /usr/local/etc/php-fpm.d/www.conf
 
@@ -67,4 +74,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost/health || exit 1
 
 # Start supervisord
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+ENTRYPOINT ["./entrypoint.sh"]

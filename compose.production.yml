@@ -2,11 +2,18 @@ services:
   api:
     image: ${API_IMAGE}
     container_name: auto-api
+    ports:
+      - "${API_PORT}:80"
     networks:
       - auto-cms_internal
+      - auto-cms_external
     env_file: api-server/.env
     environment:
       - APP_ENV=PRODUCTION
+      - DB_NAME=${MYSQL_DATABASE}
+      - DB_USER=${MYSQL_ROOT_USER}
+      - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - DB_CHARSET=utf8
 
   web:
     image: ${WEB_IMAGE}
@@ -15,14 +22,15 @@ services:
       - "${APP_PORT}:80"
     networks:
       - auto-cms_external
-      - auto-cms_internal
     env_file: web/.env
 
   database:
     image: mysql
     container_name: auto-database
+    env_file:
+      - .env
     volumes:
-      - auto-database_data
+      - auto-database_data:/var/lib/mysql
     networks:
       - auto-cms_internal
 
@@ -36,3 +44,6 @@ networks:
     driver: bridge
     internal: true
     attachable: false
+
+volumes:
+  auto-database_data:

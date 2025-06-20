@@ -107,7 +107,7 @@ export default {
 
       console.log("init fetch")
       console.log("FormData: ", formData)
-      return fetch("${import.meta.env.VITE_API_URL}/images/uploadTest", request)
+      return fetch(`${import.meta.env.VITE_API_URL}/images/uploadTest`, request)
           .then(res => res.json())
           .then(data => {
             data.forEach(item => {
@@ -120,32 +120,32 @@ export default {
       this.$emit('closeCreateModal')
     },
     fetchMakes(){
-      fetch("${import.meta.env.VITE_API_URL}/makes")
+      fetch(`${import.meta.env.VITE_API_URL}/makes`)
           .then((res) => (res.json()))
           .then((data) => {this.availableMakes = data})
     },
     fetchGearboxes(){
-      fetch("${import.meta.env.VITE_API_URL}/gearboxes")
+      fetch(`${import.meta.env.VITE_API_URL}/gearboxes`)
           .then((res) => (res.json()))
           .then((data) => {this.availableTransmissions = data})
     },
     fetchColors(){
-      fetch("${import.meta.env.VITE_API_URL}/colors")
+      fetch(`${import.meta.env.VITE_API_URL}/colors`)
           .then((res) => (res.json()))
           .then((data) => {this.availableColors = data})
     },
     fetchChassis(){
-      fetch("${import.meta.env.VITE_API_URL}/chassis")
+      fetch(`${import.meta.env.VITE_API_URL}/chassis`)
           .then((res) => (res.json()))
           .then((data) => {this.availableChassis = data})
     },
     fetchFuels(){
-      fetch("${import.meta.env.VITE_API_URL}/fuels")
+      fetch(`${import.meta.env.VITE_API_URL}/fuels`)
           .then((res) => (res.json()))
           .then((data) => {this.availableFuels = data})
     },
     fetchAccessories(){
-      fetch("${import.meta.env.VITE_API_URL}/accessories")
+      fetch(`${import.meta.env.VITE_API_URL}/accessories`)
           .then((res) => (res.json()))
           .then((data) => {this.availableAccessories = data})
     },

@@ -61,6 +61,13 @@ COPY entrypoint.sh .
 # Set entrypoint executable permission
 RUN chmod +x ./entrypoint.sh
 
+# CREATE STORAGE DIRECTORY AND SET PERMISSIONS
+RUN mkdir -p /var/www/html/storage \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html \
+    && chmod -R 775 /var/www/html/storage \
+    && mkdir -p /var/log/supervisor /run/nginx
+
 # Configure PHP-FPM to listen on TCP
 RUN sed -i 's/listen = \/run\/php\/php8.4-fpm.sock/listen = 127.0.0.1:9000/' /usr/local/etc/php-fpm.d/www.conf
 

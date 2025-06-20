@@ -52,6 +52,9 @@ COPY nginx.default.conf /etc/nginx/sites-available/default
 # Copy supervisord config
 COPY supervisord.default.conf /etc/supervisor/conf.d/supervisord.conf
 
+# Copy PHP INI config
+COPY php.default.ini /usr/local/etc/php/conf.d/
+
 # Copy entrypoint script
 COPY entrypoint.sh .
 

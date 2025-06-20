@@ -4,8 +4,8 @@ services:
     container_name: auto-api
     ports:
       - "${API_PORT}:80"
+    network_mode: bridge
     networks:
-      - external
       - internal
     env_file: api-server/.env
     environment:
@@ -20,8 +20,7 @@ services:
     container_name: auto-web
     ports:
       - "${APP_PORT}:80"
-    networks:
-      - external
+    network_mode: bridge
     env_file: web/.env
 
   database:
@@ -40,10 +39,6 @@ networks:
     driver: bridge
     internal: true
     attachable: false
-
-  external:
-    external: true
-    name: bridge
 
 volumes:
   auto-database_data:

@@ -77,7 +77,7 @@ export default {
       headers.append("Content-Type", "application/json");
       headers.append("Authorization", "Bearer " + this.userStore.user.token);
 
-      fetch("${import.meta.env.VITE_API_URL}/users", {
+      fetch(`${import.meta.env.VITE_API_URL}/users`, {
         method: "GET",
         headers
       })

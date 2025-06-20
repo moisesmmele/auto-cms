@@ -58,21 +58,37 @@ class ImageController extends Controller
         $filesArray = $this->request->files;
         error_log("Files in inputBag: " . count($filesArray));
         $imageIds = [];
+
         foreach ($filesArray as $item) {
+            error_log("=== Processing file ===");
+
             $filepath = $item->getRealPath();
+            error_log("File path: " . $filepath);
+
             $name = uniqid();
             $extension = $item->guessExtension();
+            error_log("Generated name: " . $name.'.'.$extension);
 
-            error_log($name.'.'.$extension);
-
+            error_log("About to read file contents");
             $file = file_get_contents($filepath);
+            error_log("File contents read, size: " . strlen($file));
+
+            error_log("About to call imageService->uploadFromFile");
             $image = $this->imageService->uploadFromFile($file, $name, $extension, 'NULL');
+            error_log("uploadFromFile returned, image ID: " . $image->getId());
 
             $imageIds[] = [
                 'id' => $image->getId(),
             ];
+            error_log("Added to imageIds array");
         }
-        echo json_encode($imageIds);
-        error_log(json_encode($imageIds));
+
+        error_log("About to encode JSON");
+        $jsonResponse = json_encode($imageIds);
+        error_log("JSON encoded: " . $jsonResponse);
+
+        error_log("About to echo JSON");
+        echo $jsonResponse;
+        error_log("JSON echoed");
     }
 }

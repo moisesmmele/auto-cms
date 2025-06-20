@@ -4,11 +4,11 @@ export default {
   data() {
     return {
       listing: Object,
-      baseUrl: "http://localhost:8083"
+      baseUrl: "${import.meta.env.VITE_API_URL}"
     }
   },
   beforeMount() {
-    fetch(`http://localhost:8083/listings/${this.$route.params.id}`)
+    fetch(`${import.meta.env.VITE_API_URL}/listings/${this.$route.params.id}`)
         .then((response) => (response.json()))
         .then((response) => {
           this.listing = response

@@ -20,7 +20,7 @@ export default {
     VehicleCard,
   },
   beforeMount() {
-    fetch('http://localhost:8083/banners')
+    fetch(`${import.meta.env.VITE_API_URL}/banners`)
         .then((response) => (response.json()))
         .then((response) => {
           this.bannerImages = response

@@ -35,7 +35,7 @@ export default {
         body: JSON.stringify({id:id})
       }
 
-      fetch(`http://localhost:8083/${resource}/${id}`, request)
+      fetch(`${import.meta.env.VITE_API_URL}/${resource}/${id}`, request)
           .then(response => response.json()
               .then(data => ({ ok: response.ok, data })))
           .then(({ ok, data }) => {
@@ -68,7 +68,7 @@ export default {
       headers.append("Content-Type", "application/json");
       headers.append("Authorization", "Bearer " + this.userStore.user.token);
 
-      fetch("http://localhost:8083/colors", {
+      fetch("${import.meta.env.VITE_API_URL}/colors", {
         method: "GET",
         headers
       })

@@ -36,7 +36,7 @@ export default {
       if (!this.images || !this.images.length) return null;
 
       const image = this.images[this.currentIndex];
-      const baseUrl = "http://localhost:8083";
+      const baseUrl = import.meta.env.VITE_API_URL;
       return {
         ...image,
         url: baseUrl + image.url

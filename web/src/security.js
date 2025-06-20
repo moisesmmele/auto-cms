@@ -13,7 +13,9 @@ const security = {
         }
     },
     login(email, password) {
-        return fetch('http://localhost:8083/auth/login', {
+        let url = `${import.meta.env.VITE_API_URL}/auth/login`
+        console.log(url)
+        return fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({email, password})
@@ -44,7 +46,7 @@ const security = {
     },
     logout(id) {
         const payload = { id: id }
-        return fetch('http://localhost:8083/auth/logout', {
+        return fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' }, // fixed typo
             body: JSON.stringify(payload)

@@ -69,7 +69,7 @@ export default {
 
       console.log("init fetch")
       console.log("FormData: ", formData)
-      fetch("http://localhost:8083/banners", request)
+      fetch("${import.meta.env.VITE_API_URL}/banners", request)
           .then(res => res.json())
           .then(data => {
             data.forEach(item => {

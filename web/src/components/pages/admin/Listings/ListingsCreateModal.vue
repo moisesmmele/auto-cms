@@ -27,7 +27,7 @@ export default {
           price: this.price
         })
       }
-      fetch('http://localhost:8083/listings', request)
+      fetch(`${import.meta.env.VITE_API_URL}/listings`, request)
       this.$emit('closeCreateModal')
     },
     toggle() {

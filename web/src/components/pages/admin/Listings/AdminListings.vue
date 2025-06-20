@@ -31,7 +31,7 @@ export default {
       headers: headers
     }
 
-    fetch('http://localhost:8083/listings', request)
+    fetch(`${import.meta.env.VITE_API_URL}/listings`, request)
         .then((response) => (response.json()))
         .then((response) => {
           this.listings = response.listings

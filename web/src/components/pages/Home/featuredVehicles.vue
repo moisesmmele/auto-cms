@@ -5,13 +5,13 @@ export default {
   data() {
     return {
       listings: Array,
-      baseUrl: 'http://localhost:8083'
+      baseUrl: `${import.meta.env.VITE_API_URL}`
     }
   },
 
   name: "featuredVehicles",
   beforeMount() {
-    fetch('http://localhost:8083/listings')
+    fetch(`${import.meta.env.VITE_API_URL}/listings`)
         .then((response) => (response.json()))
         .then( (response) => {
           this.listings = response.listings.slice(0, 4);

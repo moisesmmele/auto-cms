@@ -46,7 +46,7 @@ export default {
       headers.append("Authorization", "Bearer " + this.token)
 
       let resource = this.resource
-      const url = `http://localhost:8083/${resource}`;
+      const url = `${import.meta.env.VITE_API_URL}/${resource}`;
       const method = "POST";
 
       let payload = {
@@ -107,7 +107,7 @@ export default {
 
       console.log("init fetch")
       console.log("FormData: ", formData)
-      return fetch("http://localhost:8083/images/uploadTest", request)
+      return fetch("${import.meta.env.VITE_API_URL}/images/uploadTest", request)
           .then(res => res.json())
           .then(data => {
             data.forEach(item => {
@@ -120,32 +120,32 @@ export default {
       this.$emit('closeCreateModal')
     },
     fetchMakes(){
-      fetch("http://localhost:8083/makes")
+      fetch("${import.meta.env.VITE_API_URL}/makes")
           .then((res) => (res.json()))
           .then((data) => {this.availableMakes = data})
     },
     fetchGearboxes(){
-      fetch("http://localhost:8083/gearboxes")
+      fetch("${import.meta.env.VITE_API_URL}/gearboxes")
           .then((res) => (res.json()))
           .then((data) => {this.availableTransmissions = data})
     },
     fetchColors(){
-      fetch("http://localhost:8083/colors")
+      fetch("${import.meta.env.VITE_API_URL}/colors")
           .then((res) => (res.json()))
           .then((data) => {this.availableColors = data})
     },
     fetchChassis(){
-      fetch("http://localhost:8083/chassis")
+      fetch("${import.meta.env.VITE_API_URL}/chassis")
           .then((res) => (res.json()))
           .then((data) => {this.availableChassis = data})
     },
     fetchFuels(){
-      fetch("http://localhost:8083/fuels")
+      fetch("${import.meta.env.VITE_API_URL}/fuels")
           .then((res) => (res.json()))
           .then((data) => {this.availableFuels = data})
     },
     fetchAccessories(){
-      fetch("http://localhost:8083/accessories")
+      fetch("${import.meta.env.VITE_API_URL}/accessories")
           .then((res) => (res.json()))
           .then((data) => {this.availableAccessories = data})
     },

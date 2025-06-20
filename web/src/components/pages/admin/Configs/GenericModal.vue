@@ -30,8 +30,8 @@ export default {
       let id = this.id
       let resource = this.resource
       const url = (this.type === 'edit')
-          ? `http://localhost:8083/${resource}/${id}`
-          : `http://localhost:8083/${resource}`;
+          ? `${import.meta.env.VITE_API_URL}/${resource}/${id}`
+          : `${import.meta.env.VITE_API_URL}/${resource}`;
 
       const method = (this.type === 'edit') ? "PUT" : "POST";
 
